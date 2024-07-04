@@ -17,6 +17,10 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
+# Link source code
+ARG DD_GIT_COMMIT_SHA
+ENV DD_TAGS="git.repository_url:github.com/kennethfoo24/marvel,git.commit.sha:${DD_GIT_COMMIT_SHA}"
+
 # datadog unified service tagging
 ENV DD_SERVICE="avengers-nodejs"
 ENV DD_ENV="avengers-app"
