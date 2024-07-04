@@ -63,12 +63,46 @@ app.get('/status/:code', (req, res) => {
     const error = simulateError('This is a mockup error message for a bad request. The request could not be understood by the server due to malformed syntax.');
     logger.warn(`Handling bad request: ${error.message}`, { stack: error.stack });
   } else if (code === 500) {
-    const error = simulateError('This is a mockup error message for an internal server error. An unexpected condition was encountered.', 'InternalServerError');
-    logger.error(`Handling server error: ${error.message}`, { kind: error.kind, stack: error.stack });
+    // Simulate an error by throwing it
+    const error = new Error('Something went wrong');
+    error.status = 500;
+
+    // Log the error using Winston
+    logger.error({
+        message: error.message,
+        status: error.status,
+        stack: error.stack
+    });
+
+    // Respond with the error status and message
+    res.status(error.status).json({
+        error: {
+            message: error.message
+        }
+    });
+    //const error = simulateError('This is a mockup error message for an internal server error. An unexpected condition was encountered.', 'InternalServerError');
+    //logger.error(`Handling server error: ${error.message}`, { kind: error.kind, stack: error.stack });
   } else {
     logger.info({ message: `Simulating HTTP ${code}`, code: code });
   }
   res.status(code).send(`HTTP ${code} - ${require('http').STATUS_CODES[code]}`);
+});
+
+// Error-handling middleware
+app.use((err, req, res, next) => {
+  // Log the error using Winston
+  logger.error({
+      message: err.message,
+      status: err.status,
+      stack: err.stack
+  });
+
+  // Respond with the error status and message
+  res.status(err.status || 500).json({
+      error: {
+          message: err.message
+      }
+  });
 });
 
 app.listen(port, () => {
