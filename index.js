@@ -3,6 +3,8 @@ const path = require('path');
 const logger = require('./logger');
 const app = express();
 const port = 3000;
+const tracer = require('dd-trace').init();
+const span = tracer.scope().active()
 
 // Function to simulate errors with stack trace
 const simulateError = (message) => {
@@ -49,6 +51,7 @@ app.get('/avenger/:name', (req, res) => {
   const avenger = avengers[req.params.name];
   if (avenger) {
     logger.info({ message: 'Avenger selected', avenger: avenger.name });
+    span.setTag('avenger', avenger.name)
     res.json(avenger);
   } else {
     logger.error({ message: 'Avenger not found', avenger: req.params.name });
