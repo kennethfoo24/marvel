@@ -6,11 +6,7 @@ const port = 3000;
 
 // Function to simulate errors with stack trace
 const simulateError = (message) => {
-  try {
-    throw new Error(message);
-  } catch (error) {
-    return error;
-  }
+  throw new Error(message);
 };
 
 // Serve static files from the 'public' directory
