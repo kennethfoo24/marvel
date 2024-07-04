@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Staatliches&family=Bangers&display=swap');
+
+body {
+  font-family: 'Staatliches', sans-serif;
+  background-image: url('marvel-background.jpg');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+h1, h2 {
+  font-family: 'Bangers', cursive;
+  color: #f0131e;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+form {
+  margin: 20px 0;
+  width: 100%;
+  max-width: 300px;
+}
+
+label {
+  font-size: 1.2em;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 2px solid #f0131e;
+  border-radius: 5px;
+  font-size: 1.2em;
+}
+
+button {
+  background-color: #f0131e;
+  color: white;
+  padding: 15px 30px;
+  font-size: 1.5em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px;
+  transition: background-color 0.3s;
+  width: 100%;
+  max-width: 300px;
+}
+
+button:hover {
+  background-color: #d0111b;
+}
+
+#avenger-image {
+  display: block;
+  margin: 20px auto;
+  max-width: 100%;
+  height: auto;
+}
+
+div {
+  margin: 20px 0;
+}
+
+@media (max-width: 768px) {
+  h1, h2 {
+    font-size: 1.5em;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+  }
+}

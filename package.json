@@ -1,0 +1,16 @@
+{
+    "name": "marvel-website",
+    "version": "1.0.0",
+    "description": "A simple Marvel Avenger selector web application",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "author": "Your Name",
+    "license": "ISC",
+    "dependencies": {
+        "dd-trace": "^5.17.0",
+        "express": "^4.19.2",
+        "winston": "^3.13.0"
+    }
+}
