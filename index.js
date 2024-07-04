@@ -57,7 +57,8 @@ app.get('/status/:code', (req, res) => {
   if (code === 400) {
     logger.error({ message: 'Simulating multiple error logs for 400', errors: ['Error 1', 'Error 2', 'Error 3'] });
   } else if (code === 500) {
-    logger.error({ message: 'Simulating multiple error logs for 500', errors: ['Error 1', 'Error 2', 'Error 3'] });
+    throw new Error('Simulating multiple error logs for 500')
+    logger.error({ message: `Handling server error: ${error.message}`, errors: ['Error 1', 'Error 2', 'Error 3'] });
   } else {
     logger.info({ message: `Simulating HTTP ${code}`, code: code });
   }
