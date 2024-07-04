@@ -41,10 +41,10 @@ app.get('/select-avenger', (req, res) => {
 // Handle avenger selection
 app.get('/avenger/:name', (req, res) => {
   const avengers = {
-    ironman: { name: 'Iron Man', image: 'ironman.jpg', phrase: 'I am Iron Man.' },
-    captainamerica: { name: 'Captain America', image: 'captainamerica.jpg', phrase: 'I can do this all day.' },
-    thor: { name: 'Thor', image: 'thor.jpg', phrase: 'Bring me Thanos!' },
-    hulk: { name: 'Hulk', image: 'hulk.jpg', phrase: 'Hulk smash!' }
+    ironman: { name: 'Iron Man', image: 'ironman.png', phrase: 'I am Iron Man.' },
+    captainamerica: { name: 'Captain America', image: 'captainamerica.png', phrase: 'I can do this all day.' },
+    thor: { name: 'Thor', image: 'thor.png', phrase: 'Bring me Thanos!' },
+    hulk: { name: 'Hulk', image: 'hulk.png', phrase: 'Hulk smash!' }
   };
   const avenger = avengers[req.params.name];
   if (avenger) {
