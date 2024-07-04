@@ -4,6 +4,15 @@ const logger = require('./logger');
 const app = express();
 const port = 3000;
 
+// Function to simulate errors with stack trace
+const simulateError = (message) => {
+  try {
+    throw new Error(message);
+  } catch (error) {
+    return error;
+  }
+};
+
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -55,10 +64,11 @@ app.get('/avenger/:name', (req, res) => {
 app.get('/status/:code', (req, res) => {
   const code = parseInt(req.params.code, 10);
   if (code === 400) {
-    logger.error({ message: 'Simulating multiple error logs for 400', errors: ['Error 1', 'Error 2', 'Error 3'] });
+    const error = simulateError('This is a mockup error message for a bad request. The request could not be understood by the server due to malformed syntax.');
+    logger.warn(`Handling bad request: ${error.message}`, { stack: error.stack });
   } else if (code === 500) {
-    throw new Error('Simulating multiple error logs for 500')
-    logger.error({ message: `Handling server error: ${error.message}`, errors: ['Error 1', 'Error 2', 'Error 3'] });
+    const error = simulateError('This is a mockup error message for an internal server error. An unexpected condition was encountered.', 'InternalServerError');
+    logger.error(`Handling server error: ${error.message}`, { kind: error.kind, stack: error.stack });
   } else {
     logger.info({ message: `Simulating HTTP ${code}`, code: code });
   }
