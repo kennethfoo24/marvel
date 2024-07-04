@@ -51,7 +51,6 @@ app.get('/avenger/:name', (req, res) => {
   const avenger = avengers[req.params.name];
   if (avenger) {
     logger.info({ message: 'Avenger selected', avenger: avenger.name });
-    span.setTag('avenger', avenger.name)
     res.json(avenger);
   } else {
     logger.error({ message: 'Avenger not found', avenger: req.params.name });
