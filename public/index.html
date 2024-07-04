@@ -20,6 +20,7 @@
         site: 'datadoghq.com',
         service: 'avengers-app-browser',
         env: 'avengers-app',
+        allowedTracingUrls: [(url) => url.startsWith("https://kenneth-marvel")],
         // Specify a version number to identify the deployed version of your application in Datadog
         version: 'phase:1', 
         sessionSampleRate: 100,
