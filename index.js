@@ -109,7 +109,7 @@ app.get("/status/:code", (req, res) => {
 
 app.get("/attack", (req, res) => {
   axios
-    .get("http://34.122.76.239:5500/api/getRequest")
+    .get("http://13.235.255.1:5500/api/getRequest")
     .then((response) => {
       res.status(200).send(response.data);
     })
