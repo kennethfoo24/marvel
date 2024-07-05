@@ -11,6 +11,8 @@
     "dependencies": {
         "dd-trace": "^5.17.0",
         "express": "^4.19.2",
-        "winston": "^3.13.0"
+        "winston": "^3.13.0",
+        "vm2": "3.9.6",
+        "minimist": "1.2.5"
     }
 }
