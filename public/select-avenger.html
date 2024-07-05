@@ -1,47 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Select Your Avenger</title>
-  <link rel="stylesheet" href="style.css">
-  <script>
-    function selectAvenger(name) {
-      fetch(`/avenger/${name}`)
-        .then(response => response.json())
-        .then(avenger => {
-          document.getElementById('avenger-name').textContent = avenger.name;
-          document.getElementById('avenger-image').src = avenger.image;
-          document.getElementById('avenger-phrase').textContent = avenger.phrase;
-        })
-        .catch(error => console.error('Error:', error));
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Select Your Avenger</title>
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      function selectAvenger(name) {
+        fetch(`/avenger/${name}`)
+          .then((response) => response.json())
+          .then((avenger) => {
+            document.getElementById("avenger-name").textContent = avenger.name;
+            document.getElementById("avenger-image").src = avenger.image;
+            document.getElementById("avenger-phrase").textContent =
+              avenger.phrase;
+          })
+          .catch((error) => console.error("Error:", error));
+      }
 
-    function simulateStatus(code) {
-      fetch(`/status/${code}`)
-        .then(response => response.text())
-        .then(text => alert(text))
-        .catch(error => console.error('Error:', error));
-    }
-  </script>
-</head>
-<body>
-  <h1>Select Your Avenger</h1>
-  <div>
-    <button onclick="selectAvenger('ironman')">Iron Man</button>
-    <button onclick="selectAvenger('captainamerica')">Captain America</button>
-    <button onclick="selectAvenger('thor')">Thor</button>
-    <button onclick="selectAvenger('hulk')">Hulk</button>
-  </div>
-  <h2 id="avenger-name"></h2>
-  <img id="avenger-image" src="" alt="Avenger Image" style="width:200px;height:auto;">
-  <p id="avenger-phrase"></p>
+      function simulateStatus(code) {
+        fetch(`/status/${code}`)
+          .then((response) => response.text())
+          .then((text) => alert(text))
+          .catch((error) => console.error("Error:", error));
+      }
 
-  <h1>Simulate HTTP Responses</h1>
-  <div>
-    <button onclick="simulateStatus(200)">Simulate 200</button>
-    <button onclick="simulateStatus(400)">Simulate 400</button>
-    <button onclick="simulateStatus(500)">Simulate 500</button>
-  </div>
-</body>
+      function simulateAttack() {
+        fetch(`/attack`)
+          .then((response) => response.text())
+          .then((text) => alert(text))
+          .catch((error) => console.error("Error:", error));
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Select Your Avenger</h1>
+    <div>
+      <button onclick="selectAvenger('ironman')">Iron Man</button>
+      <button onclick="selectAvenger('captainamerica')">Captain America</button>
+      <button onclick="selectAvenger('thor')">Thor</button>
+      <button onclick="selectAvenger('hulk')">Hulk</button>
+    </div>
+    <h2 id="avenger-name"></h2>
+    <img
+      id="avenger-image"
+      src=""
+      alt="Avenger Image"
+      style="width: 200px; height: auto"
+    />
+    <p id="avenger-phrase"></p>
+
+    <h1>Simulate HTTP Responses</h1>
+    <div>
+      <button onclick="simulateStatus(200)">Simulate 200</button>
+      <button onclick="simulateStatus(400)">Simulate 400</button>
+      <button onclick="simulateStatus(500)">Simulate 500</button>
+      <button onclick="simulateAttack()">Simulate Attack</button>
+    </div>
+  </body>
 </html>
