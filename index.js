@@ -119,6 +119,18 @@ app.get("/attack", (req, res) => {
     });
 });
 
+app.get("/attackGKE", (req, res) => {
+  axios
+    .get("http://104.154.177.43:80/api/getRequest")
+    .then((response) => {
+      res.status(200).send(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).send("Error");
+    });
+});
+
 // Error-handling middleware
 app.use((err, req, res, next) => {
   // Log the error using Winston
