@@ -38,13 +38,6 @@
           .then((text) => alert(text))
           .catch((error) => console.error("Error:", error));
       }
-
-      document.getElementById('serverErrorBtn').addEventListener('click', () => {
-            fetch('/server-error')
-                .then(response => response.json())
-                .then(data => document.getElementById('response').innerText = JSON.stringify(data))
-                .catch(error => document.getElementById('response').innerText = error);
-        });
     </script>
   </head>
   <body>
@@ -71,7 +64,6 @@
       <button onclick="simulateStatus(500)">Simulate 500</button>
       <button onclick="simulateAttack()">Simulate Attack</button>
       <button onclick="simulateAttackGKE()">Simulate Attack GKE</button>
-      <button id="serverErrorBtn">Simulate 500 Internal Server Error</button>
     </div>
   </body>
 </html>
