@@ -65,18 +65,11 @@ app.get("/avenger/:name", (req, res) => {
   if (avenger) {
     logger.info({ message: "Avenger selected", avenger: avenger.name });
     res.json(avenger);
+    span.setTag('avenger', avenger.name)
   } else {
     logger.error({ message: "Avenger not found", avenger: req.params.name });
     res.status(404).send("Avenger not found");
   }
-});
-
-// Endpoint to simulate 500 Internal Server Error
-app.get('/server-error', (req, res) => {
-  const error = simulateError('This is a mockup error message for an internal server error. An unexpected condition was encountered.', 'InternalServerError');
-  logger.error(`Handling server error: ${error.message}`, { kind: error.kind, stack: error.stack });
-  res.status(500).json({ message: 'Internal Server Error', error: error.message });
-  span.setTag('error', e);
 });
 
 // Simulate HTTP status responses
