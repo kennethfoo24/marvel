@@ -16,6 +16,8 @@
         "lodash": "4.3",
         "minimist": "^0.1.0",
         "vm2": "3.9.6",
-        "winston": "^3.13.0"
+        "winston": "^3.13.0",
+        @datadog/browser-rum, 
+        @datadog/browser-logs,
     }
 }
