@@ -83,6 +83,8 @@ app.get("/avenger/:name", (req, res) => {
   const avenger = avengers[req.params.name];
   if (avenger) {
     logger.info({ message: "Avenger selected", avenger: avenger.name });
+    const span = tracer.scope().active();
+    span.setTag("avenger", avenger.name);
     res.json(avenger);
     const span = tracer.scope().active();
     span.setTag('avenger', avenger.name);
