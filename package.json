@@ -17,7 +17,7 @@
         "minimist": "^0.1.0",
         "vm2": "3.9.6",
         "winston": "^3.13.0",
-        "@datadog/browser-rum": "5.22.0",
-        "@datadog/browser-logs": "5.22.0",
+        "@datadog/browser-rum": "^5.22.0",
+        "@datadog/browser-logs": "^5.22.0",
     }
 }
