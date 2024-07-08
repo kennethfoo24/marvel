@@ -9,6 +9,8 @@
     "author": "Your Name",
     "license": "ISC",
     "dependencies": {
+        "@datadog/browser-logs": "^5.22.0",
+        "@datadog/browser-rum": "^5.22.0",
         "axios": "^1.7.2",
         "dd-trace": "^5.17.0",
         "express": "^4.19.2",
