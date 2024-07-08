@@ -6,26 +6,26 @@ const port = 3000;
 const tracer = require("dd-trace").init();
 const span = tracer.scope().active();
 const axios = require("axios").default;
-import { datadogRum } from '@datadog/browser-rum';
+// import { datadogRum } from '@datadog/browser-rum';
 
-datadogRum.init({
-    applicationId: 'abf6318d-6424-4d8d-9f8d-43e4e8e498ce',
-    clientToken: 'pub815b4dbf3e6fc56dee01fe5345bd8e6a',
-    // `site` refers to the Datadog site parameter of your organization
-    // see https://docs.datadoghq.com/getting_started/site/
-    site: 'datadoghq.com',
-    service: 'avengers-app-browser',
-    env: 'avengers-app',
-    // Specify a version number to identify the deployed version of your application in Datadog
-    version: 'phase:1', 
-    sessionSampleRate: 100,
-    sessionReplaySampleRate: 100,
-    trackUserInteractions: true,
-    trackResources: true,
-    trackLongTasks: true,
-    defaultPrivacyLevel: 'mask-user-input',
-    allowedTracingUrls: [(url) => url.startsWith("http://kenneth-marvel"), (url) => url.startsWith("https://kenneth-marvel")],
-});
+// datadogRum.init({
+//     applicationId: 'abf6318d-6424-4d8d-9f8d-43e4e8e498ce',
+//     clientToken: 'pub815b4dbf3e6fc56dee01fe5345bd8e6a',
+//     // `site` refers to the Datadog site parameter of your organization
+//     // see https://docs.datadoghq.com/getting_started/site/
+//     site: 'datadoghq.com',
+//     service: 'avengers-app-browser',
+//     env: 'avengers-app',
+//     // Specify a version number to identify the deployed version of your application in Datadog
+//     version: 'phase:1', 
+//     sessionSampleRate: 100,
+//     sessionReplaySampleRate: 100,
+//     trackUserInteractions: true,
+//     trackResources: true,
+//     trackLongTasks: true,
+//     defaultPrivacyLevel: 'mask-user-input',
+//     allowedTracingUrls: [(url) => url.startsWith("http://kenneth-marvel"), (url) => url.startsWith("https://kenneth-marvel")],
+// });
 
 // Function to simulate errors with stack trace
 const simulateError = (message) => {
