@@ -1,4 +1,3 @@
-import { datadogRum } from '@datadog/browser-rum';
 const express = require("express");
 const path = require("path");
 const logger = require("./logger");
@@ -7,6 +6,7 @@ const port = 3000;
 const tracer = require("dd-trace").init();
 const span = tracer.scope().active();
 const axios = require("axios").default;
+import { datadogRum } from '@datadog/browser-rum';
 
 datadogRum.init({
     applicationId: 'abf6318d-6424-4d8d-9f8d-43e4e8e498ce',
