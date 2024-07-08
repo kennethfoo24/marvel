@@ -4,7 +4,6 @@ const logger = require("./logger");
 const app = express();
 const port = 3000;
 const tracer = require("dd-trace").init();
-const span = tracer.scope().active();
 const axios = require("axios").default;
 // import { datadogRum } from '@datadog/browser-rum';
 
@@ -85,7 +84,8 @@ app.get("/avenger/:name", (req, res) => {
   if (avenger) {
     logger.info({ message: "Avenger selected", avenger: avenger.name });
     res.json(avenger);
-    span.setTag('avenger', avenger.name)
+    const span = tracer.scope().active();
+    span.setTag('avenger', avenger.name);
   } else {
     logger.error({ message: "Avenger not found", avenger: req.params.name });
     res.status(404).send("Avenger not found");
