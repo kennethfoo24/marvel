@@ -2,6 +2,7 @@
     "name": "marvel-website",
     "version": "1.0.0",
     "description": "A simple Marvel Avenger selector web application",
+    "type": "module",
     "main": "index.js",
     "scripts": {
         "start": "node index.js"
