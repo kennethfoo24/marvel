@@ -142,7 +142,7 @@ app.get("/attack", (req, res) => {
 
 app.get("/attackGKE", (req, res) => {
   axios
-    .get("http://104.154.177.43:80/api/getRequest")
+    .get("http://104.154.177.43:80/api/getRequest", { headers: { 'User-Agent': 'dd-test-scanner-log' }  })
     .then((response) => {
       res.status(200).send(response.data);
     })
