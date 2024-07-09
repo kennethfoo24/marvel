@@ -130,7 +130,9 @@ app.get("/status/:code", (req, res) => {
 
 app.get("/attack", (req, res) => {
   axios
-    .get("https://cloudrunpythonbe-n2at3rsn5a-uc.a.run.app/api/getRequest")
+    .get("https://cloudrunpythonbe-n2at3rsn5a-uc.a.run.app/api/getRequest", {
+      headers: { "User-Agent": "dd-test-scanner-log" },
+    })
     .then((response) => {
       res.status(200).send(response.data);
     })
