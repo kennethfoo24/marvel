@@ -16,7 +16,7 @@ const axios = require("axios").default;
 //     service: 'avengers-app-browser',
 //     env: 'avengers-app',
 //     // Specify a version number to identify the deployed version of your application in Datadog
-//     version: 'phase:1', 
+//     version: 'phase:1',
 //     sessionSampleRate: 100,
 //     sessionReplaySampleRate: 100,
 //     trackUserInteractions: true,
@@ -86,8 +86,6 @@ app.get("/avenger/:name", (req, res) => {
     const span = tracer.scope().active();
     span.setTag("avenger", avenger.name);
     res.json(avenger);
-    const span = tracer.scope().active();
-    span.setTag('avenger', avenger.name);
   } else {
     logger.error({ message: "Avenger not found", avenger: req.params.name });
     res.status(404).send("Avenger not found");
@@ -144,7 +142,9 @@ app.get("/attack", (req, res) => {
 
 app.get("/attackGKE", (req, res) => {
   axios
-    .get("http://104.154.177.43:80/api/getRequest", { headers: { 'User-Agent': 'dd-test-scanner-log' }  })
+    .get("http://104.154.177.43:80/api/getRequest", {
+      headers: { "User-Agent": "dd-test-scanner-log" },
+    })
     .then((response) => {
       res.status(200).send(response.data);
     })
