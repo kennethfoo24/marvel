@@ -31,7 +31,16 @@
       defaultPrivacyLevel: 'mask-user-input',
     });
     })
-
+  </script>
+</head>
+<body>
+  <h1>Welcome to the Marvel Avenger Selector</h1>
+  <form id="userForm" action="/submit-username" method="post">
+    <label for="username">Enter your username:</label>
+    <input type="text" id="username" name="username" required>
+    <button type="submit">Submit</button>
+  </form>
+  <script>
       // Capture form submission
       document.getElementById('userForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form submission
@@ -48,13 +57,5 @@
       console.log('User name set in Datadog RUM:', username);
       });
   </script>
-</head>
-<body>
-  <h1>Welcome to the Marvel Avenger Selector</h1>
-  <form id="userForm" action="/submit-username" method="post">
-    <label for="username">Enter your username:</label>
-    <input type="text" id="username" name="username" required>
-    <button type="submit">Submit</button>
-  </form>
 </body>
 </html>
