@@ -48,8 +48,10 @@
       var username = document.getElementById('username').value;
 
       // Set the user in Datadog RUM
-      window.DD_RUM.setUser({
-        name: username
+      window.DD_RUM.onReady(function() {
+        window.DD_RUM.setUser({
+            name: username
+        })
       });
 
       // Store the username in session storage
