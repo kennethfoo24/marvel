@@ -136,6 +136,19 @@ app.get("/attackGKE", (req, res) => {
     });
 });
 
+app.get("/thanos", (req, res) => {
+  axios
+    .get("http://34.67.3.96:80/delayed-response", {
+    })
+    .then((response) => {
+      res.status(200).send(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).send("Error");
+    });
+});
+
 // Error-handling middleware
 app.use((err, req, res, next) => {
   // Log the error using Winston
