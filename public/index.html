@@ -31,11 +31,26 @@
       defaultPrivacyLevel: 'mask-user-input',
     });
   })
+
+      // Capture form submission
+      document.getElementById('userForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+      // Get the username from the input field
+      var username = document.getElementById('username').value;
+
+      // Set the user in Datadog RUM
+      window.DD_RUM.setUser({
+        name: username
+      });
+
+      // Optionally, you can log the event or handle it as needed
+      console.log('User name set in Datadog RUM:', username);
   </script>
 </head>
 <body>
   <h1>Welcome to the Marvel Avenger Selector</h1>
-  <form action="/submit-username" method="post">
+  <form id="userForm" action="/submit-username" method="post">
     <label for="username">Enter your username:</label>
     <input type="text" id="username" name="username" required>
     <button type="submit">Submit</button>
