@@ -65,6 +65,14 @@
           .then((text) => alert(text))
           .catch((error) => console.error("Error:", error));
       }
+
+      function thanos() {
+        fetch(`/thanos`)
+          .then((response) => response.text())
+          .then((text) => alert(text))
+          .catch((error) => console.error("Error:", error));
+      }
+
     </script>
   </head>
   <body>
@@ -82,6 +90,7 @@
       <button onclick="selectAvenger('captainamerica')">Captain America</button>
       <button onclick="selectAvenger('thor')">Thor</button>
       <button onclick="selectAvenger('hulk')">Hulk</button>
+      <button onclick="thanos()">Thanos</button>
     </div>
     <h2 id="avenger-name"></h2>
     <img
