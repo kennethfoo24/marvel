@@ -25,12 +25,12 @@
           .catch((error) => console.error("Error:", error));
       }
 
-      function simulateAttack() {
-        fetch(`/attack`)
-          .then((response) => response.text())
-          .then((text) => alert(text))
-          .catch((error) => console.error("Error:", error));
-      }
+      // function simulateAttack() {
+      //   fetch(`/attack`)
+      //     .then((response) => response.text())
+      //     .then((text) => alert(text))
+      //     .catch((error) => console.error("Error:", error));
+      // }
 
       function simulateAttackGKE() {
         fetch(`/attackGKE`)
@@ -62,8 +62,7 @@
       <button onclick="simulateStatus(200)">Simulate 200</button>
       <button onclick="simulateStatus(400)">Simulate 400</button>
       <button onclick="simulateStatus(500)">Simulate 500</button>
-      <button onclick="simulateAttack()">Simulate Attack</button>
-      <button onclick="simulateAttackGKE()">Simulate Attack GKE</button>
+      <button onclick="simulateAttackGKE()">Simulate Attack</button>
     </div>
   </body>
 </html>
