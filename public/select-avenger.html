@@ -68,8 +68,13 @@
 
       function thanos() {
         fetch(`/thanos`)
-          .then((response) => response.text())
-          .then((text) => alert(text))
+          .then((response) => response.json())
+          .then((avenger) => {
+            document.getElementById("avenger-name").textContent = avenger.name;
+            document.getElementById("avenger-image").src = avenger.image;
+            document.getElementById("avenger-phrase").textContent =
+              avenger.phrase;
+          })
           .catch((error) => console.error("Error:", error));
       }
 

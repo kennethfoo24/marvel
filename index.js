@@ -137,11 +137,22 @@ app.get("/attackGKE", (req, res) => {
 });
 
 app.get("/thanos", (req, res) => {
+  const avengers = {
+    thanos: {
+      name: "Thanos",
+      image: "thanos.png",
+      phrase: "INFINITY SNAP!",
+    },
+  };
+  const avenger = avengers[req.params.name];
   axios
     .get("http://34.67.3.96:80/delayed-response", {
     })
     .then((response) => {
       res.status(200).send(response.data);
+      const span = tracer.scope().active();
+      span.setTag("avenger", avenger.name);
+      res.json(avenger);
     })
     .catch((error) => {
       console.log(error);
