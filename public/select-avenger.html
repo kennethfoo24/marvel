@@ -21,7 +21,8 @@
       service: 'avengers-app-browser',
       env: 'avengers-app',
       // Specify a version number to identify the deployed version of your application in Datadog
-      version: 'phase1', 
+      version: 'phase1',
+      allowedTracingUrls: ["https://dd-demo-sg.one", "http://dd-demo-sg.one"],
       sessionSampleRate: 100,
       sessionReplaySampleRate: 100,
       trackUserInteractions: true,
