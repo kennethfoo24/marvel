@@ -30,7 +30,12 @@
       trackLongTasks: true,
       defaultPrivacyLevel: 'mask-user-input',
       });
-      }) 
+      })
+
+      const username = sessionStorage.getItem('username');
+      window.DD_RUM.setUser({
+            name: username
+        });
       
       function selectAvenger(name) {
         fetch(`/avenger/${name}`)
