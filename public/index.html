@@ -43,7 +43,6 @@
   <script>
       // Capture form submission
       document.getElementById('userForm').addEventListener('submit', function(event) {
-            // event.preventDefault(); // Prevent form submission
 
       // Get the username from the input field
       var username = document.getElementById('username').value;
@@ -52,6 +51,9 @@
       window.DD_RUM.setUser({
         name: username
       });
+
+      // Store the username in session storage
+      sessionStorage.setItem('username', username);
 
       // Optionally, you can log the event or handle it as needed
       console.log('User name set in Datadog RUM:', username);
