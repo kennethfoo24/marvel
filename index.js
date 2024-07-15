@@ -73,7 +73,7 @@ app.get("/avenger/:name", (req, res) => {
       axios
         .get("http://34.67.3.96:80/delayed-response", {})
         .then((response) => {
-          res.status(200).send(response.data);
+          console.log(response);
           const span = tracer.scope().active();
           span.setTag("avenger", avenger.name);
           res.json(avenger);
