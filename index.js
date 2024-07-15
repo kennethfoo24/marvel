@@ -71,11 +71,12 @@ app.get("/avenger/:name", (req, res) => {
   switch (avenger.name) {
     case "Thanos":
       axios
-        .get("http://34.67.95.125:80/api/getRequest", {
-          headers: { "User-Agent": "dd-test-scanner-log" },
-        })
+        .get("http://34.67.3.96:80/delayed-response", {})
         .then((response) => {
           res.status(200).send(response.data);
+          const span = tracer.scope().active();
+          span.setTag("avenger", avenger.name);
+          res.json(avenger);
         })
         .catch((error) => {
           console.log(error);
