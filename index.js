@@ -67,10 +67,10 @@ app.get("/avenger/:name", (req, res) => {
     res.status(404).send("Avenger not found");
     return;
   }
-  
+
   switch (avenger.name) {
-      case 'Thanos':
-          axios
+    case "Thanos":
+      axios
         .get("http://34.67.95.125:80/api/getRequest", {
           headers: { "User-Agent": "dd-test-scanner-log" },
         })
@@ -81,17 +81,15 @@ app.get("/avenger/:name", (req, res) => {
           console.log(error);
           res.status(400).send("Error");
         });
-        break,
+      break;
 
-      default:
-        logger.info({ message: "Avenger selected", avenger: avenger.name });
-        const span = tracer.scope().active();
-        span.setTag("avenger", avenger.name);
-        res.json(avenger);
-  };
-
+    default:
+      logger.info({ message: "Avenger selected", avenger: avenger.name });
+      const span = tracer.scope().active();
+      span.setTag("avenger", avenger.name);
+      res.json(avenger);
+  }
 });
-
 
 // Simulate HTTP status responses
 app.get("/status/:code", (req, res) => {
@@ -167,8 +165,7 @@ app.get("/thanos", (req, res) => {
   };
   const avenger = avengers[req.params.name];
   axios
-    .get("http://34.67.3.96:80/delayed-response", {
-    })
+    .get("http://34.67.3.96:80/delayed-response", {})
     .then((response) => {
       res.status(200).send(response.data);
       const span = tracer.scope().active();
