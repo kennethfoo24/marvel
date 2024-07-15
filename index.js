@@ -59,18 +59,39 @@ app.get("/avenger/:name", (req, res) => {
     },
     thor: { name: "Thor", image: "thor.png", phrase: "Bring me Thanos!" },
     hulk: { name: "Hulk", image: "hulk.png", phrase: "Hulk smash!" },
+    thanos: { name: "Thanos", image: "thanos.png", phrase: "INFINITY SNAP!" },
   };
   const avenger = avengers[req.params.name];
-  if (avenger) {
-    logger.info({ message: "Avenger selected", avenger: avenger.name });
-    const span = tracer.scope().active();
-    span.setTag("avenger", avenger.name);
-    res.json(avenger);
-  } else {
+  if (!avenger) {
     logger.error({ message: "Avenger not found", avenger: req.params.name });
     res.status(404).send("Avenger not found");
+    return;
   }
+  
+  switch (avenger.name) {
+      case 'Thanos':
+          axios
+        .get("http://34.67.95.125:80/api/getRequest", {
+          headers: { "User-Agent": "dd-test-scanner-log" },
+        })
+        .then((response) => {
+          res.status(200).send(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+          res.status(400).send("Error");
+        });
+        break,
+
+      default:
+        logger.info({ message: "Avenger selected", avenger: avenger.name });
+        const span = tracer.scope().active();
+        span.setTag("avenger", avenger.name);
+        res.json(avenger);
+  };
+
 });
+
 
 // Simulate HTTP status responses
 app.get("/status/:code", (req, res) => {
