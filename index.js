@@ -46,22 +46,15 @@ app.get("/select-avenger", (req, res) => {
 
 // Handle avenger selection
 app.get("/avenger/:name", (req, res) => {
-  const avengers = {
-    ironman: {
-      name: "Iron Man",
-      image: "ironman.png",
-      phrase: "I am Iron Man.",
-    },
-    captainamerica: {
-      name: "Captain America",
-      image: "captainamerica.png",
-      phrase: "I can do this all day.",
-    },
+  const avengers = { 
+    ironman: { name: "Iron Man", image: "ironman.png", phrase: "I am Iron Man." },
+    captainamerica: { name: "Captain America", image: "captainamerica.png", phrase: "I can do this all day." },
     thor: { name: "Thor", image: "thor.png", phrase: "Bring me Thanos!" },
     hulk: { name: "Hulk", image: "hulk.png", phrase: "Hulk smash!" },
     thanos: { name: "Thanos", image: "thanos.png", phrase: "INFINITY SNAP!" },
   };
   const avenger = avengers[req.params.name];
+  
   if (!avenger) {
     logger.error({ message: "Avenger not found", avenger: req.params.name });
     res.status(404).send("Avenger not found");
@@ -73,7 +66,8 @@ app.get("/avenger/:name", (req, res) => {
       axios
         .get("http://34.67.3.96:80/delayed-response", {})
         .then((response) => {
-          console.log(response);
+          res.status(200).send(response);
+          logger.info({ message: response });
           const span = tracer.scope().active();
           span.setTag("avenger", avenger.name);
           res.json(avenger);
