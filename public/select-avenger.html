@@ -82,6 +82,26 @@
           .then((text) => alert(text))
           .catch((error) => console.error("Error:", error));
       }
+
+      function autofillSQLInjection() {
+            document.getElementById('userInput').value = "'; DROP TABLE users; SELECT * FROM information_schema.tables; --";
+        }
+
+        async function submitForm(event) {
+            event.preventDefault();
+            const userInput = document.getElementById('userInput').value;
+
+            const response = await fetch('/security-submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userInput })
+            });
+
+            const result = await response.text();
+            alert(result);
+        }
     </script>
   </head>
   <body>
@@ -117,5 +137,11 @@
       <button onclick="simulateStatus(500)">Simulate 500</button>
       <button onclick="simulateAttackGKE()">Simulate Attack</button>
     </div>
+    <h1>SQL Injection Demo</h1>
+    <form id="inputForm" onsubmit="submitForm(event)">
+        <input type="text" id="userInput" name="userInput" required>
+        <button type="submit">Submit</button>
+    </form>
+    <button onclick="autofillSQLInjection()">Autofill SQL Injection</button>
   </body>
 </html>

@@ -1,10 +1,14 @@
 const express = require("express");
 const path = require("path");
 const logger = require("./logger");
+const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 const tracer = require("dd-trace").init();
 const axios = require("axios").default;
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // Function to simulate errors with stack trace
 const simulateError = (message) => {
@@ -189,6 +193,12 @@ app.use((err, req, res, next) => {
     },
   });
 });
+
+app.post('/security-submit', (req, res) => {
+  console.log('Received input:', req.body.userInput);
+  res.send('Input received');
+});
+
 
 app.listen(port, () => {
   logger.info({ message: `Server running at http://localhost:${port}/` });
