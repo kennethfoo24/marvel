@@ -107,6 +107,7 @@ app.get("/avenger/:name", (req, res) => {
 
 // Endpoint to get all users
 app.get('/users', (req, res) => {
+  console.log('Received request for /users');
   db.query('SELECT * FROM users', (error, results) => {
     if (error) {
       console.error('Error fetching users:', error);
