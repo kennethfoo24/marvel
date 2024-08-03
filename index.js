@@ -6,7 +6,7 @@ const app = express();
 const port = 3000;
 const tracer = require("dd-trace").init();
 const axios = require("axios").default;
-import pg from "pg";
+const pg = require('pg');
 
 const db = new pg.Client({
   user: "admin",
