@@ -6,6 +6,15 @@ const app = express();
 const port = 3000;
 const tracer = require("dd-trace").init();
 const axios = require("axios").default;
+import pg from "pg";
+
+const db = new pg.Client({
+  user: "admin",
+  host: "postgres-service",
+  database: "userdb",
+  password: "securepassword",
+  port: 5432,
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -40,6 +49,12 @@ app.get("/", (req, res) => {
 app.post("/submit-username", (req, res) => {
   const username = req.body.username;
   logger.info({ message: "Username submitted", username: username });
+  db.query('INSERT INTO users (username) VALUES ($1)', [username], (error, results) => {
+    if (error) {
+      throw error;
+    }
+    res.send('Username saved: ' + username);
+  });
   res.redirect(`/select-avenger?username=${username}`);
 });
 
