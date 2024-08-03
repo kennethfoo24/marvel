@@ -16,14 +16,7 @@ const db = new pg.Client({
   port: 5432,
 });
 
-db.connect((error) => {
-  if (err) {
-    logger.error({ message: 'Error connecting to the database', error: error });
-  } else {
-    logger.info({ message: "Connected to the database" });
-  }
-});
-
+db.connect();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
