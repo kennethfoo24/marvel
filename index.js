@@ -105,6 +105,19 @@ app.get("/avenger/:name", (req, res) => {
   }
 });
 
+// Endpoint to get all users
+app.get('/users', (req, res) => {
+  db.query('SELECT * FROM users', (error, results) => {
+    if (error) {
+      console.error('Error fetching users:', error);
+      res.status(500).send('Error fetching users');
+    } else {
+      console.log('Users:', results.rows);
+      res.status(200).json(results.rows);
+    }
+  });
+});
+
 // Simulate HTTP status responses
 app.get("/status/:code", (req, res) => {
   const code = parseInt(req.params.code, 10);
