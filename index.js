@@ -91,7 +91,8 @@ app.get("/avenger/:name", async (req, res) => {
         span.setTag("avenger", avenger.name);
         const response = await axios.get("http://34.67.3.96:80/delayed-response");
         logger.info({ message: "Thanos response received", data: response.data });
-        res.status(200).json(response.data);
+        logger.info({ message: "Avenger selected", avenger: avenger.name });
+        res.json(avenger);
       } catch (error) {
         logger.error({ message: "Error fetching Thanos response", error: error });
         res.status(400).send("Error");
