@@ -27,10 +27,8 @@ const simulateError = (message) => {
   throw new Error(message);
 };
 
-// Serve static files from the 'public' directory with caching
-app.use(express.static(path.join(__dirname, "public"), {
-  maxAge: '1d', // Cache static files for 1 day
-}));
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, "public")));
 
 // Parse URL-encoded bodies (as sent by HTML forms)
 app.use(express.urlencoded({ extended: true }));
@@ -71,7 +69,7 @@ app.get("/select-avenger", (req, res) => {
 });
 
 // Handle avenger selection
-app.get("/avenger/:name", async (req, res) => {
+app.get("/avenger/:name", (req, res) => {
   const avengers = { 
     ironman: { name: "Iron Man", image: "ironman.png", phrase: "I am Iron Man." },
     captainamerica: { name: "Captain America", image: "captainamerica.png", phrase: "I can do this all day." },
@@ -83,25 +81,32 @@ app.get("/avenger/:name", async (req, res) => {
   
   if (!avenger) {
     logger.error({ message: "Avenger not found", avenger: req.params.name });
-    return res.status(404).send("Avenger not found");
+    res.status(404).send("Avenger not found");
+    return;
   }
 
-  if (avenger.name === "Thanos") {
-    try {
-      const response = await axios.get("http://34.67.3.96:80/delayed-response");
-      res.status(200).json(response.data);
-      logger.info({ message: "Thanos response received", data: response.data });
+  switch (avenger.name) {
+    case "Thanos":
+      axios
+        .get("http://34.67.3.96:80/delayed-response", {})
+        .then((response) => {
+          res.status(200).send(response);
+          logger.info({ message: response });
+          const span = tracer.scope().active();
+          span.setTag("avenger", avenger.name);
+          res.json(avenger);
+        })
+        .catch((error) => {
+          console.log(error);
+          res.status(400).send("Error");
+        });
+      break;
+
+    default:
+      logger.info({ message: "Avenger selected", avenger: avenger.name });
       const span = tracer.scope().active();
       span.setTag("avenger", avenger.name);
-    } catch (error) {
-      logger.error({ message: "Error fetching Thanos response", error: error });
-      res.status(400).send("Error");
-    }
-  } else {
-    logger.info({ message: "Avenger selected", avenger: avenger.name });
-    const span = tracer.scope().active();
-    span.setTag("avenger", avenger.name);
-    res.json(avenger);
+      res.json(avenger);
   }
 });
 
