@@ -6,17 +6,16 @@ const app = express();
 const port = 3000;
 const tracer = require("dd-trace").init();
 const axios = require("axios").default;
-const pg = require('pg');
+const { Pool } = require('pg');
 
-const db = new pg.Client({
+// Database connection configuration
+const pool = new Pool({
   user: "admin",
   host: "35.232.212.199",
   database: "userdb",
   password: "securepassword",
   port: 5432,
 });
-
-db.connect();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -48,17 +47,18 @@ app.get("/", (req, res) => {
 });
 
 // Handle username submission
-app.post("/submit-username", (req, res) => {
+app.post("/submit-username", async (req, res) => {
   const username = req.body.username;
   logger.info({ message: "Username submitted", username: username });
-  db.query('INSERT INTO users (username) VALUES ($1)', [username], (error, results) => {
-    if (error) {
-      logger.error({ message: 'Error inserting user', error: error });
-      return res.status(500).send('Error inserting user');
-    }
-    logger.info({ message: 'Username saved', username: username });
+
+  try {
+    const results = await pool.query('INSERT INTO users (username) VALUES ($1) RETURNING *', [username]);
+    logger.info({ message: 'Username saved', username: results.rows[0].username });
     res.redirect(`/select-avenger?username=${username}`);
-  });
+  } catch (error) {
+    logger.error({ message: 'Error inserting user', error: error });
+    res.status(500).send('Error inserting user');
+  }
 });
 
 // Serve the avenger selection page
@@ -109,18 +109,17 @@ app.get("/avenger/:name", (req, res) => {
 });
 
 // Endpoint to get all users
-app.get('/users', (req, res) => {
+app.get('/users', async (req, res) => {
   console.log('Received request for /users');
   logger.info({ message: "Received request for /users" });
-  db.query('SELECT * FROM users', (error, results) => {
-    if (error) {
-      console.error('Error fetching users:', error);
-      res.status(500).send('Error fetching users');
-    } else {
-      console.log('Users:', results.rows);
-      res.status(200).json(results.rows);
-    }
-  });
+  try {
+    const results = await pool.query('SELECT * FROM users');
+    console.log('Users:', results.rows);
+    res.status(200).json(results.rows);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).send('Error fetching users');
+  }
 });
 
 // Simulate HTTP status responses
