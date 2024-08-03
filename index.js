@@ -51,19 +51,26 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Handle username submission
-app.post("/submit-username", async (req, res) => {
-  const username = req.body.username;
-  logger.info({ message: "Username submitted", username: username });
+// // Handle username submission
+// app.post("/submit-username", (req, res) => {
+//   const username = req.body.username;
+//   logger.info({ message: "Username submitted", username: username });
 
-  try {
-    // const results = await pool.query('INSERT INTO users (username) VALUES ($1) RETURNING *', [username]);
-    logger.info({ message: 'Username saved', username: results.rows[0].username });
-    res.redirect(`/select-avenger?username=${username}`);
-  } catch (error) {
-    logger.error({ message: 'Error inserting user', error: error });
-    res.status(500).send('Error inserting user');
-  }
+//   try {
+//     // const results = await pool.query('INSERT INTO users (username) VALUES ($1) RETURNING *', [username]);
+//     logger.info({ message: 'Username saved', username: results.rows[0].username });
+//     res.redirect(`/select-avenger?username=${username}`);
+//   } catch (error) {
+//     logger.error({ message: 'Error inserting user', error: error });
+//     res.status(500).send('Error inserting user');
+//   }
+// });
+
+// Handle username submission
+app.post('/submit-username', (req, res) => {
+  const username = req.body.username;
+  logger.info({ message: 'Username submitted', username: username });
+  res.redirect(`/select-avenger?username=${username}`);
 });
 
 // Serve the avenger selection page
