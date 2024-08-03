@@ -49,7 +49,7 @@ app.get("/select-avenger", (req, res) => {
 });
 
 // Handle avenger selection
-app.get("/avenger/:name", (req, res) => {
+app.get("/avenger/:name", async (req, res) => {
   const avengers = { 
     ironman: { name: "Iron Man", image: "ironman.png", phrase: "I am Iron Man." },
     captainamerica: { name: "Captain America", image: "captainamerica.png", phrase: "I can do this all day." },
@@ -61,31 +61,28 @@ app.get("/avenger/:name", (req, res) => {
   
   if (!avenger) {
     logger.error({ message: "Avenger not found", avenger: req.params.name });
-    res.status(404).send("Avenger not found");
-    return;
+    return res.status(404).send("Avenger not found");
   }
 
   switch (avenger.name) {
     case "Thanos":
-      axios
-        .get("http://34.67.3.96:80/delayed-response", {})
-        .then((response) => {
-          res.status(200).send(response);
-          logger.info({ message: response });
-          const span = tracer.scope().active();
-          span.setTag("avenger", avenger.name);
-          res.json(avenger);
-        })
-        .catch((error) => {
-          console.log(error);
-          res.status(400).send("Error");
-        });
+      try {
+        const span = tracer.scope().active();
+        span.setTag("avenger", avenger.name);
+        const response = await axios.get("http://34.67.3.96:80/delayed-response");
+        logger.info({ message: "Thanos response received", data: response.data });
+        logger.info({ message: "Avenger selected", avenger: avenger.name });
+        res.json(avenger);
+      } catch (error) {
+        logger.error({ message: "Error fetching Thanos response", error: error });
+        res.status(400).send("Error");
+      }
       break;
 
     default:
       logger.info({ message: "Avenger selected", avenger: avenger.name });
-      const span = tracer.scope().active();
-      span.setTag("avenger", avenger.name);
+      const spanDefault = tracer.scope().active();
+      spanDefault.setTag("avenger", avenger.name);
       res.json(avenger);
   }
 });
@@ -195,7 +192,7 @@ app.use((err, req, res, next) => {
 });
 
 app.post('/security-submit', (req, res) => {
-  console.log('Received input:', req.body.userInput);
+  logger.info('Received input:', req.body.userInput);
   res.send('Input received');
 });
 
