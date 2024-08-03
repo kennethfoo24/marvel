@@ -15,7 +15,15 @@ const db = new pg.Client({
   password: "securepassword",
   port: 5432,
 });
-db.connect();
+
+db.connect((error) => {
+  if (err) {
+    logger.error({ message: 'Error connecting to the database', error: error });
+  } else {
+    logger.info({ message: "Connected to the database" });
+  }
+});
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -52,11 +60,12 @@ app.post("/submit-username", (req, res) => {
   logger.info({ message: "Username submitted", username: username });
   db.query('INSERT INTO users (username) VALUES ($1)', [username], (error, results) => {
     if (error) {
-      throw error;
+      logger.error({ message: 'Error inserting user', error: error });
+      return res.status(500).send('Error inserting user');
     }
-    res.send('Username saved: ' + username);
+    logger.info({ message: 'Username saved', username: username });
+    res.redirect(`/select-avenger?username=${username}`);
   });
-  res.redirect(`/select-avenger?username=${username}`);
 });
 
 // Serve the avenger selection page
