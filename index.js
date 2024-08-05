@@ -7,19 +7,19 @@ const port = 3000;
 const tracer = require("dd-trace").init();
 const axios = require("axios").default;
 const { Pool } = require('pg');
-// require('dotenv').config(); // Using dotenv for environment variables
+require('dotenv').config(); // Using dotenv for environment variables
 
-// Database connection configuration using environment variables
-// const pool = new Pool({
-//   user: process.env.DB_USER,
-//   host: process.env.DB_HOST,
-//   database: process.env.DB_NAME,
-//   password: process.env.DB_PASSWORD,
-//   port: process.env.DB_PORT,
-//   max: 20, // Maximum number of connections in the pool
-//   idleTimeoutMillis: 5000, // Close idle clients after 5 seconds
-//   connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
-// });
+Database connection configuration using environment variables
+const pool = new Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
+  max: 20, // Maximum number of connections in the pool
+  idleTimeoutMillis: 5000, // Close idle clients after 5 seconds
+  connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -116,18 +116,18 @@ app.get("/avenger/:name", async (req, res) => {
   }
 });
 
-// // Endpoint to get all users
-// app.get('/users', async (req, res) => {
-//   logger.info({ message: "Received request for /users" });
-//   try {
-//     const results = await pool.query('SELECT * FROM users');
-//     logger.info({ message: 'Users fetched', users: results.rows });
-//     res.status(200).json(results.rows);
-//   } catch (error) {
-//     logger.error('Error fetching users:', error);
-//     res.status(500).send('Error fetching users');
-//   }
-// });
+// Endpoint to get all users
+app.get('/users', async (req, res) => {
+  logger.info({ message: "Received request for /users" });
+  try {
+    const results = await pool.query('SELECT * FROM users');
+    logger.info({ message: 'Users fetched', users: results.rows });
+    res.status(200).json(results.rows);
+  } catch (error) {
+    logger.error('Error fetching users:', error);
+    res.status(500).send('Error fetching users');
+  }
+});
 
 // Simulate HTTP status responses
 app.get("/status/:code", (req, res) => {
