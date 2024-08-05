@@ -179,19 +179,33 @@ app.get("/status/:code", (req, res) => {
 //     });
 // });
 
-app.get("/attackGKE", (req, res) => {
-  axios
-    .get("http://34.67.95.125:80/api/getRequest", {
-      headers: { "User-Agent": "dd-test-scanner-log" },
-    })
-    .then((response) => {
-      res.status(200).send(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(400).send("Error");
+// app.get("/attackGKE", (req, res) => {
+//   axios
+//     .get("http://34.67.95.125:80/api/getRequest", {
+//       headers: { "User-Agent": "dd-test-scanner-log" },
+//     })
+//     .then((response) => {
+//       res.status(200).send(response.data);
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//       res.status(400).send("Error");
+//     });
+// });
+
+// Optimized route for attackGKE
+app.get('/attackGKE', async (req, res) => {
+  try {
+    const response = await axios.get('http://34.67.95.125:80/api/getRequest', {
+      headers: { 'User-Agent': 'dd-test-scanner-log' },
     });
+    res.status(200).send(response.data);
+  } catch (error) {
+    logger.error('Error:', error);
+    res.status(400).send('Error fetching data from GKE');
+  }
 });
+
 
 app.get("/thanos", (req, res) => {
   const avengers = {
