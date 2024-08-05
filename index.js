@@ -247,9 +247,26 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.post('/security-submit', (req, res) => {
-  logger.info('Received input:', req.body.userInput);
-  res.send('Input received');
+// app.post('/security-submit', (req, res) => {
+//   logger.info('Received input:', req.body.userInput);
+//   res.send('Input received');
+// });
+
+app.post("/security-submit", (req, res) => {
+  const userInput = req.body.userInput;
+
+  // Vulnerable SQL query (for demonstration purposes only)
+  const query = `${userInput}`;
+  console.log("Executing query:", query);
+
+  pool.query(query, (err, results) => {
+    if (err) {
+      logger.error("Database error:", err);
+      res.status(500).send("Database error");
+      return;
+    }
+    res.json(results);
+  });
 });
 
 app.listen(port, () => {
