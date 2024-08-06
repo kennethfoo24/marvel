@@ -72,7 +72,7 @@ app.post("/submit-username", async (req, res) => {
   logger.info({ message: "Username submitted", username: username });
 
   try {
-    // const results = await pool.query('INSERT INTO users (username) VALUES ($1) RETURNING *', [username]);
+    const results = await pool.query('INSERT INTO users (username) VALUES ($1) RETURNING *', [username]);
     logger.info({ message: 'Username saved', username: results.rows[0].username });
     res.redirect(`/select-avenger?username=${username}`);
   } catch (error) {
