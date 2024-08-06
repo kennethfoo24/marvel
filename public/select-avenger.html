@@ -84,7 +84,7 @@
       }
 
       function autofillSQLInjection() {
-            document.getElementById('userInput').value = "SELECT * FROM users";
+            document.getElementById('userInput').value = "; DROP TABLE users; SELECT * FROM users; --";
         }
 
         async function submitForm(event) {
