@@ -81,7 +81,6 @@ app.post('/submit-username', (req, res) => {
     url: req.url,
     user: username,
   });
-  next();
   logger.info({ message: 'Username submitted', username: username });
   res.redirect(`/select-avenger?username=${username}`);
 });
