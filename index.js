@@ -21,6 +21,26 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
 });
 
+// Middleware to log requests and add user information to traces
+app.use((req, res, next) => {
+  const username = req.body.username || req.query.username || req.headers['x-username'];
+  
+  if (username) {
+    tracer.setUser({
+      id: username, // Unique identifier for the user
+      name: username,
+    });
+  }
+
+  logger.info({
+    message: "Request received",
+    method: req.method,
+    url: req.url,
+    user: username,
+  });
+  next();
+});
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

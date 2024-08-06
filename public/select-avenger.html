@@ -110,6 +110,7 @@
       const username = sessionStorage.getItem("username");
       window.DD_RUM.onReady(function () {
         window.DD_RUM.setUser({
+          id: username,
           name: username,
         });
       });
