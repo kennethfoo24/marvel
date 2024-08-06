@@ -24,6 +24,33 @@ const pool = new Pool({
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Middleware to log requests and add user information to traces
+app.use((req, res, next) => {
+  const username = req.body.username || req.query.username || req.headers['x-username'];
+  
+  if (username) {
+    tracer.setUser({
+      id: username, // Unique identifier for the user
+      name: username,
+    });
+
+    logger.info({
+      message: "Request received",
+      method: req.method,
+      url: req.url,
+      user: username,
+    });
+  } else {
+    logger.info({
+      message: "Request received",
+      method: req.method,
+      url: req.url,
+    });
+  }
+
+  next();
+});
+
 // Function to simulate errors with stack trace
 const simulateError = (message) => {
   throw new Error(message);
@@ -34,16 +61,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Parse URL-encoded bodies (as sent by HTML forms)
 app.use(express.urlencoded({ extended: true }));
-
-// Middleware to log requests
-app.use((req, res, next) => {
-  logger.info({
-    message: "Request received",
-    method: req.method,
-    url: req.url,
-  });
-  next();
-});
 
 // Serve the homepage
 app.get("/", (req, res) => {
@@ -68,19 +85,6 @@ app.get("/", (req, res) => {
 // Handle username submission
 app.post('/submit-username', (req, res) => {
   const username = req.body.username;
-  if (username) {
-    tracer.setUser({
-      id: username, // Unique identifier for the user
-      name: username,
-    });
-  }
-
-  logger.info({
-    message: "Request received",
-    method: req.method,
-    url: req.url,
-    user: username,
-  });
   logger.info({ message: 'Username submitted', username: username });
   res.redirect(`/select-avenger?username=${username}`);
 });
