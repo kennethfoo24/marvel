@@ -23,6 +23,11 @@ const pool = new Pool({
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, "public")));
+
+// Parse URL-encoded bodies (as sent by HTML forms)
+app.use(express.urlencoded({ extended: true }));
 
 // Middleware to log requests and add user information to traces
 app.use((req, res, next) => {
@@ -56,38 +61,32 @@ const simulateError = (message) => {
   throw new Error(message);
 };
 
-// Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, "public")));
-
-// Parse URL-encoded bodies (as sent by HTML forms)
-app.use(express.urlencoded({ extended: true }));
-
 // Serve the homepage
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// // Handle username submission
-// app.post("/submit-username", (req, res) => {
-//   const username = req.body.username;
-//   logger.info({ message: "Username submitted", username: username });
-
-//   try {
-//     // const results = await pool.query('INSERT INTO users (username) VALUES ($1) RETURNING *', [username]);
-//     logger.info({ message: 'Username saved', username: results.rows[0].username });
-//     res.redirect(`/select-avenger?username=${username}`);
-//   } catch (error) {
-//     logger.error({ message: 'Error inserting user', error: error });
-//     res.status(500).send('Error inserting user');
-//   }
-// });
-
 // Handle username submission
-app.post('/submit-username', (req, res) => {
+app.post("/submit-username", async (req, res) => {
   const username = req.body.username;
-  logger.info({ message: 'Username submitted', username: username });
-  res.redirect(`/select-avenger?username=${username}`);
+  logger.info({ message: "Username submitted", username: username });
+
+  try {
+    // const results = await pool.query('INSERT INTO users (username) VALUES ($1) RETURNING *', [username]);
+    logger.info({ message: 'Username saved', username: results.rows[0].username });
+    res.redirect(`/select-avenger?username=${username}`);
+  } catch (error) {
+    logger.error({ message: 'Error inserting user', error: error });
+    res.status(500).send('Error inserting user');
+  }
 });
+
+// // Handle username submission
+// app.post('/submit-username', (req, res) => {
+//   const username = req.body.username;
+//   logger.info({ message: 'Username submitted', username: username });
+//   res.redirect(`/select-avenger?username=${username}`);
+// });
 
 // Serve the avenger selection page
 app.get("/select-avenger", (req, res) => {
@@ -116,7 +115,9 @@ app.get("/avenger/:name", async (req, res) => {
         const span = tracer.scope().active();
         span.setTag("avenger", avenger.name);
         const response = await axios.get("http://34.67.3.96:80/delayed-response");
-        logger.info({ message: "Thanos response received", data: response.data });
+        logger.error({ message: "OMG! It's Thanos, everybody run !", avenger: avenger.name });
+        logger.warn({ message: "You should have gone for the head !", avenger: avenger.name });
+        logger.info({ message: "Thanos has arrived !", data: response.data });
         logger.info({ message: "Avenger selected", avenger: avenger.name });
         res.json(avenger);
       } catch (error) {
@@ -126,9 +127,13 @@ app.get("/avenger/:name", async (req, res) => {
       break;
 
     default:
-      logger.info({ message: "Avenger selected", avenger: avenger.name });
       const spanDefault = tracer.scope().active();
       spanDefault.setTag("avenger", avenger.name);
+      logger.error({ message: "AVENGERS ASSEMBLE !", avenger: avenger.name });
+      logger.warn({ message: "I am... Iron Man.", avenger: avenger.name });
+      logger.info({ message: "Captain America Hail Hydra", avenger: avenger.name });
+      logger.info({ message: "Hulk Smashhh!", avenger: avenger.name });
+      logger.info({ message: "Whosoever holds this hammer, if he be worthy, shall possess the power of Thor.", avenger: avenger.name });
       res.json(avenger);
   }
 });
@@ -196,20 +201,6 @@ app.get("/status/:code", (req, res) => {
 //     });
 // });
 
-// app.get("/attackGKE", (req, res) => {
-//   axios
-//     .get("http://34.67.95.125:80/api/getRequest", {
-//       headers: { "User-Agent": "dd-test-scanner-log" },
-//     })
-//     .then((response) => {
-//       res.status(200).send(response.data);
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//       res.status(400).send("Error");
-//     });
-// });
-
 // Optimized route for attackGKE
 app.get('/attackGKE', async (req, res) => {
   try {
@@ -222,7 +213,6 @@ app.get('/attackGKE', async (req, res) => {
     res.status(400).send('Error fetching data from GKE');
   }
 });
-
 
 app.get("/thanos", (req, res) => {
   const avengers = {
