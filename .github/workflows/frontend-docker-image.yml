@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_REPOSITORY: kennethfoo24 # name of Docker Hub ID
-      IMAGE_NAME: marvel
+      IMAGE_NAME: frontend-marvel
     steps:
     - uses: actions/checkout@v4
     
@@ -25,7 +25,8 @@ jobs:
       with:
         image: ${{ env.DOCKER_REPOSITORY }}/${{ env.IMAGE_NAME }}
         registry: docker.io
+        dockerfile: Dockerfile
         tags: ${{ github.sha }}
-        buildArgs: 'DD_GIT_REPOSITORY_URL=github.com/kennethfoo24/marvel,DD_GIT_COMMIT_SHA=$(git rev-parse HEAD)'        
+        buildArgs: 'DD_GIT_REPOSITORY_URL=github.com/kennethfoo24/frontend-marvel,DD_GIT_COMMIT_SHA=$(git rev-parse HEAD)'        
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}

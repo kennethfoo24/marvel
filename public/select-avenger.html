@@ -50,9 +50,11 @@
         });
       });
 
+      const BACKEND_URL = 'http://your-backend-service-url';  // Replace with your backend service URL
+
       function selectAvenger(name) {
         const username = sessionStorage.getItem("username");
-        fetch(`/avenger/${name}`, {
+        fetch(`${BACKEND_URL}/avenger/${name}`, {
         headers: {
           "X-Username": username
         }
@@ -68,7 +70,7 @@
 
       function simulateStatus(code) {
         const username = sessionStorage.getItem("username");
-        fetch(`/status/${code}`, {
+        fetch(`${BACKEND_URL}/status/${code}`, {
         headers: {
           "X-Username": username
         }
@@ -87,7 +89,7 @@
 
       function simulateAttackGKE() {
         const username = sessionStorage.getItem("username");
-        fetch(`/attackGKE`, {
+        fetch(`${BACKEND_URL}/attackGKE`, {
         headers: {
           "X-Username": username
         }
@@ -106,7 +108,7 @@
             const userInput = document.getElementById('userInput').value;
             const username = sessionStorage.getItem("username");
 
-            const response = await fetch('/security-submit', {
+            const response = await fetch('${BACKEND_URL}/security-submit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
