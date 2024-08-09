@@ -51,19 +51,28 @@
       });
 
       function selectAvenger(name) {
-        fetch(`/avenger/${name}`)
+        const username = sessionStorage.getItem("username");
+        fetch(`/avenger/${name}`, {
+        headers: {
+          "X-Username": username
+        }
+      })
           .then((response) => response.json())
           .then((avenger) => {
             document.getElementById("avenger-name").textContent = avenger.name;
             document.getElementById("avenger-image").src = avenger.image;
-            document.getElementById("avenger-phrase").textContent =
-              avenger.phrase;
+            document.getElementById("avenger-phrase").textContent = avenger.phrase;
           })
           .catch((error) => console.error("Error:", error));
       }
 
       function simulateStatus(code) {
-        fetch(`/status/${code}`)
+        const username = sessionStorage.getItem("username");
+        fetch(`/status/${code}`, {
+        headers: {
+          "X-Username": username
+        }
+      })
           .then((response) => response.text())
           .then((text) => alert(text))
           .catch((error) => console.error("Error:", error));
@@ -77,24 +86,31 @@
       // }
 
       function simulateAttackGKE() {
-        fetch(`/attackGKE`)
+        const username = sessionStorage.getItem("username");
+        fetch(`/attackGKE`, {
+        headers: {
+          "X-Username": username
+        }
+      })
           .then((response) => response.text())
           .then((text) => alert(text))
           .catch((error) => console.error("Error:", error));
       }
 
       function autofillSQLInjection() {
-            document.getElementById('userInput').value = "; DROP TABLE users; SELECT * FROM users; --";
+            document.getElementById('userInput').value = "'; DROP TABLE users; SELECT * FROM users; --";
         }
 
         async function submitForm(event) {
             event.preventDefault();
             const userInput = document.getElementById('userInput').value;
+            const username = sessionStorage.getItem("username");
 
             const response = await fetch('/security-submit', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-Username': username
                 },
                 body: JSON.stringify({ userInput })
             });
