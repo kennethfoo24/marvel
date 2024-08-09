@@ -15,7 +15,7 @@ COPY --from=datadog/dd-lib-js-init /operator-build/node_modules /dd_tracer/node/
 RUN npm install
 
 # Copy the rest of the application code
-COPY ../. .
+COPY ../ .
 
 # Link source code
 ARG DD_GIT_COMMIT_SHA
