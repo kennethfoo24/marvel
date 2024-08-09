@@ -50,11 +50,12 @@
         window.DD_RUM.setUser({
             id: username,
             name: username
-        })
+        });
       });
       sessionStorage.setItem('username', username);
 
       try {
+        console.log(`Submitting username: ${username}`);
         const response = await fetch('http://34.41.126.4/submit-username', {
           method: 'POST',
           headers: {
@@ -64,6 +65,7 @@
         });
 
         if (response.ok) {
+          console.log('Username submitted successfully');
           window.location.href = 'select-avenger.html';
         } else {
           console.error('Error submitting username:', response.statusText);

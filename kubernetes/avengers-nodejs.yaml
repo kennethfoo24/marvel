@@ -36,6 +36,19 @@ spec:
     spec:
       containers:
       - env:
+        - name: DB_USER
+          value: "admin"
+        - name: DB_HOST
+          value: "35.232.212.199"
+        - name: DB_NAME
+          value: "userdb"
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: DB_PASSWORD
+        - name: DB_PORT
+          value: "5432"
         - name: DD_APM_ENABLED
           value: "true"
         - name: DD_APPSEC_ENABLED
@@ -51,7 +64,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: status.hostIP
-        image: kennethfoo24/marvel:195ca62e2a9fdbc4b0cdc832e3d04021f27a95b5
+        image: kennethfoo24/marvel:ebaf46a66f3e5d909ac4688c5c35281a25695601
         imagePullPolicy: Always
         name: avengers-nodejs
         ports:
