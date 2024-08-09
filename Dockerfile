@@ -2,7 +2,7 @@
 FROM nginx:alpine
 
 # Copy the custom NGINX configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY public/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy the static files to the Nginx web root
 COPY public /usr/share/nginx/html
