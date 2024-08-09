@@ -203,7 +203,6 @@ app.get("/status/:code", (req, res) => {
 
 // Optimized route for attackGKE
 app.get('/attackGKE', async (req, res) => {
-  const username = req.headers['x-username'];
   try {
     const response = await axios.get('http://35.193.52.148:80/api/getRequest', {
       headers: { 
