@@ -65,7 +65,8 @@ const simulateError = (message) => {
 
 // Serve the homepage
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  logger.info({ message: "Backend server is running" });
+  res.send("Backend server is running");
 });
 
 // Handle username submission
@@ -89,11 +90,6 @@ app.post("/submit-username", async (req, res) => {
 //   logger.info({ message: 'Username submitted', username: username });
 //   res.redirect(`/select-avenger?username=${username}`);
 // });
-
-// Serve the avenger selection page
-app.get("/select-avenger", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "select-avenger.html"));
-});
 
 // Handle avenger selection
 app.get("/avenger/:name", async (req, res) => {
