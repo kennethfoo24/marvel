@@ -7,6 +7,7 @@ const port = 3000;
 const tracer = require("dd-trace").init();
 const axios = require("axios").default;
 const { Pool } = require('pg');
+const cors = require("cors");
 require('dotenv').config(); // Using dotenv for environment variables
 
 // Database connection configuration using environment variables
@@ -21,6 +22,7 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
 });
 
+app.use(cors({ origin: '*' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // Serve static files from the 'public' directory
