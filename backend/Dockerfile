@@ -5,7 +5,7 @@ FROM node:21
 WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
+COPY ../package*.json ./
 
 # Copy datadog serverless-init and datadog tracer
 COPY --from=datadog/serverless-init:1 /datadog-init /app/datadog-init
@@ -15,7 +15,7 @@ COPY --from=datadog/dd-lib-js-init /operator-build/node_modules /dd_tracer/node/
 RUN npm install
 
 # Copy the rest of the application code
-COPY . .
+COPY ../. .
 
 # Link source code
 ARG DD_GIT_COMMIT_SHA
