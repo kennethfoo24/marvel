@@ -22,7 +22,9 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
 });
 
-app.use(cors({ origin: '*' }));
+app.use(cors());
+app.options('*', cors()) // include before other routes
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // Serve static files from the 'public' directory
