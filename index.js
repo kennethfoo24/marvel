@@ -203,9 +203,13 @@ app.get("/status/:code", (req, res) => {
 
 // Optimized route for attackGKE
 app.get('/attackGKE', async (req, res) => {
+  const username = req.headers['x-username'];
   try {
     const response = await axios.get('http://35.193.52.148:80/api/getRequest', {
-      headers: { 'User-Agent': 'dd-test-scanner-log' },
+      headers: { 
+        'User-Agent': 'dd-test-scanner-log',
+        'X-Username': username
+      },
     });
     res.status(200).send(response.data);
   } catch (error) {
