@@ -36,32 +36,41 @@
 </head>
 <body>
   <h1>Welcome to the Marvel Avenger Selector</h1>
-  <form id="userForm" action="http://34.41.126.4/submit-username" method="post">
+  <form id="userForm">
     <label for="username">Enter your username:</label>
     <input type="text" id="username" name="username" required>
     <button type="submit">Submit</button>
   </form>
   <script>
-      // Capture form submission
-      document.getElementById('userForm').addEventListener('submit', function(event) {
-
-      // Get the username from the input field
+      document.getElementById('userForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
       var username = document.getElementById('username').value;
-
-      // Set the user in Datadog RUM
       window.DD_RUM.onReady(function() {
         window.DD_RUM.setUser({
-            id: username, // Or any unique user identifier
+            id: username,
             name: username
         })
       });
-
-      // Store the username in session storage
       sessionStorage.setItem('username', username);
 
-      // Optionally, you can log the event or handle it as needed
-      console.log('User name set in Datadog RUM:', username);
-      });
+      try {
+        const response = await fetch('http://34.41.126.4/submit-username', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username: username })
+        });
+
+        if (response.ok) {
+          window.location.href = 'select-avenger.html';
+        } else {
+          console.error('Error submitting username:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error submitting username:', error);
+      }
+    });
   </script>
 </body>
 </html>
