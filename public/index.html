@@ -56,7 +56,7 @@
 
       try {
         console.log(`Submitting username: ${username}`);
-        const response = await fetch('http://34.41.126.4/submit-username', {
+        const response = await fetch('/api/submit-username', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
