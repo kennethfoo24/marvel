@@ -88,13 +88,6 @@ app.post("/submit-username", async (req, res) => {
   }
 });
 
-// // Handle username submission
-// app.post('/submit-username', (req, res) => {
-//   const username = req.body.username;
-//   logger.info({ message: 'Username submitted', username: username });
-//   res.redirect(`/select-avenger?username=${username}`);
-// });
-
 // Handle avenger selection
 app.get("/avenger/:name", async (req, res) => {
   const avengers = { 
