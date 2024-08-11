@@ -6,7 +6,7 @@ metadata:
     country: sg
     run: avengers-nodejs
     tags.datadoghq.com/env: avengers-app
-    tags.datadoghq.com/service: avengers-nodejs
+    tags.datadoghq.com/service: avengers-nodejs-k8
     tags.datadoghq.com/version: phase3
   name: avengers-nodejs
   namespace: marvel-python-backend
@@ -31,7 +31,7 @@ spec:
         country: sg
         run: avengers-nodejs
         tags.datadoghq.com/env: avengers-app
-        tags.datadoghq.com/service: avengers-nodejs
+        tags.datadoghq.com/service: avengers-nodejs-k8
         tags.datadoghq.com/version: phase3
         admission.datadoghq.com/enabled: "true"
     spec:
@@ -52,6 +52,8 @@ spec:
           value: "5432"
         - name: DD_APM_ENABLED
           value: "true"
+        - name: DD_SERVICE
+          value: "avengers-nodejs-k8"
         - name: DD_APPSEC_ENABLED
           value: "true"
         - name: DD_PROFILING_ENABLED
