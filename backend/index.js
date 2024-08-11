@@ -37,7 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Middleware to log requests and add user information to traces
 app.use((req, res, next) => {
-  const username = req.body.username || req.query.username || req.headers['x-username'];
+  const username = req.headers['x-username'];
   
   if (username) {
     tracer.setUser({
