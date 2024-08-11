@@ -9,7 +9,6 @@ const tracer = require('dd-trace').init({
 });
 const axios = require("axios").default;
 const { Pool } = require('pg');
-const cors = require("cors");
 require('dotenv').config(); // Using dotenv for environment variables
 
 // Database connection configuration using environment variables
@@ -24,9 +23,6 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
 });
 
-app.use(cors());
-app.options('*', cors()) // include before other routes
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // Serve static files from the 'public' directory
@@ -37,7 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Middleware to log requests and add user information to traces
 app.use((req, res, next) => {
-  const username = req.headers['x-username'];
+  const username = req.body.username || req.query.username || req.headers['x-username'];
   
   if (username) {
     tracer.setUser({
@@ -69,8 +65,7 @@ const simulateError = (message) => {
 
 // Serve the homepage
 app.get("/", (req, res) => {
-  logger.info({ message: "Backend server is running" });
-  res.send("Backend server is running");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // Handle username submission
@@ -94,6 +89,11 @@ app.post("/submit-username", async (req, res) => {
 //   logger.info({ message: 'Username submitted', username: username });
 //   res.redirect(`/select-avenger?username=${username}`);
 // });
+
+// Serve the avenger selection page
+app.get("/select-avenger", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "select-avenger.html"));
+});
 
 // Handle avenger selection
 app.get("/avenger/:name", async (req, res) => {

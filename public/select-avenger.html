@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>Select Your Avenger</title>
     <link rel="stylesheet" href="style.css" />
     <script>
@@ -51,11 +50,9 @@
         });
       });
 
-      const BACKEND_URL = '/api';  // Replace with your backend service URL
-
       function selectAvenger(name) {
         const username = sessionStorage.getItem("username");
-        fetch(`${BACKEND_URL}/avenger/${name}`, {
+        fetch(`/avenger/${name}`, {
         headers: {
           "X-Username": username
         }
@@ -71,7 +68,7 @@
 
       function simulateStatus(code) {
         const username = sessionStorage.getItem("username");
-        fetch(`${BACKEND_URL}/status/${code}`, {
+        fetch(`/status/${code}`, {
         headers: {
           "X-Username": username
         }
@@ -90,7 +87,7 @@
 
       function simulateAttackGKE() {
         const username = sessionStorage.getItem("username");
-        fetch(`${BACKEND_URL}/attackGKE`, {
+        fetch(`/attackGKE`, {
         headers: {
           "X-Username": username
         }
@@ -109,7 +106,7 @@
             const userInput = document.getElementById('userInput').value;
             const username = sessionStorage.getItem("username");
 
-            const response = await fetch('${BACKEND_URL}/security-submit', {
+            const response = await fetch('/security-submit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

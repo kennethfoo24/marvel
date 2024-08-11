@@ -12,7 +12,6 @@
         "@datadog/browser-logs": "^5.22.0",
         "@datadog/browser-rum": "^5.22.0",
         "axios": "^1.7.2",
-        "cors": "^2.8.5",
         "dd-trace": "^5.17.0",
         "dotenv": "^16.4.5",
         "express": "^4.19.2",

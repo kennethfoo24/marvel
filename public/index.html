@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   <title>Marvel Avenger Selection</title>
   <link rel="stylesheet" href="style.css">
   <script>
@@ -37,43 +36,32 @@
 </head>
 <body>
   <h1>Welcome to the Marvel Avenger Selector</h1>
-  <form id="userForm">
+  <form id="userForm" action="/submit-username" method="post">
     <label for="username">Enter your username:</label>
     <input type="text" id="username" name="username" required>
     <button type="submit">Submit</button>
   </form>
   <script>
-      document.getElementById('userForm').addEventListener('submit', async function(event) {
-      event.preventDefault();
+      // Capture form submission
+      document.getElementById('userForm').addEventListener('submit', function(event) {
+
+      // Get the username from the input field
       var username = document.getElementById('username').value;
+
+      // Set the user in Datadog RUM
       window.DD_RUM.onReady(function() {
         window.DD_RUM.setUser({
-            id: username,
+            id: username, // Or any unique user identifier
             name: username
-        });
+        })
       });
+
+      // Store the username in session storage
       sessionStorage.setItem('username', username);
 
-      try {
-        console.log(`Submitting username: ${username}`);
-        const response = await fetch('/api/submit-username', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username: username })
-        });
-
-        if (response.ok) {
-          console.log('Username submitted successfully');
-          window.location.href = 'select-avenger.html';
-        } else {
-          console.error('Error submitting username:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error submitting username:', error);
-      }
-    });
+      // Optionally, you can log the event or handle it as needed
+      console.log('User name set in Datadog RUM:', username);
+      });
   </script>
 </body>
 </html>
