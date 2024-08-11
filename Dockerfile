@@ -15,6 +15,7 @@ COPY public/nginx.conf /etc/nginx/conf.d/default.conf
 COPY ./install_datadog.sh /tmp/
 ARG BASE_IMAGE=nginx:latest
 ENV BASE_IMAGE=${BASE_IMAGE}
+RUN chmod +x /tmp/install_datadog.sh
 RUN /tmp/install_datadog.sh
 
 # Expose port 8080
