@@ -1,5 +1,6 @@
 # Use an official Nginx image to serve static assets
-FROM nginx:1.27.0
+ARG BASE_IMAGE=nginx:latest
+FROM ${BASE_IMAGE}
 
 RUN rm /usr/share/nginx/html/index.html
 RUN rm /usr/share/nginx/html/50x.html
@@ -10,8 +11,11 @@ COPY public /usr/share/nginx/html
 # Copy the custom NGINX configuration
 COPY public/nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy the custom NGINX configuration
-COPY public/ngx_http_datadog_module.so /usr/lib/nginx/modules
+# Install the Datadog tracing module.
+COPY ./install_datadog.sh /tmp/
+ARG BASE_IMAGE=nginx:latest
+ENV BASE_IMAGE=${BASE_IMAGE}
+RUN /tmp/install_datadog.sh
 
 # Expose port 8080
 EXPOSE 8080
