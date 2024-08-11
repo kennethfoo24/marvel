@@ -260,26 +260,38 @@ app.use((err, req, res, next) => {
   });
 });
 
-// app.post('/security-submit', (req, res) => {
-//   logger.info('Received input:', req.body.userInput);
-//   res.send('Input received');
+// app.post("/security-submit", (req, res) => {
+//   const userInput = req.body.userInput;
+
+//   // Vulnerable SQL query (for demonstration purposes only)
+//   const query = `${userInput}`;
+//   console.log("Executing query:", query);
+
+//   pool.query(query, (err, results) => {
+//     if (err) {
+//       logger.error("Database error:", err);
+//       res.status(500).send("Database error");
+//       return;
+//     }
+//     res.json(results);
+//   });
 // });
 
-app.post("/security-submit", (req, res) => {
+// Redirect the request to the Python application
+app.post("/security-submit", async (req, res) => {
   const userInput = req.body.userInput;
+  logger.info(`Received input: ${userInput}`);
 
-  // Vulnerable SQL query (for demonstration purposes only)
-  const query = `${userInput}`;
-  console.log("Executing query:", query);
+  try {
+    const response = await axios.post('http://35.193.52.148/security-submit', {
+      userInput: userInput
+    });
 
-  pool.query(query, (err, results) => {
-    if (err) {
-      logger.error("Database error:", err);
-      res.status(500).send("Database error");
-      return;
-    }
-    res.json(results);
-  });
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    logger.error("Error submitting to Python service:", error);
+    res.status(500).send("Error submitting to Python service");
+  }
 });
 
 app.listen(port, () => {
