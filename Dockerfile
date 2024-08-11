@@ -9,7 +9,7 @@ RUN rm /usr/share/nginx/html/50x.html
 COPY public /usr/share/nginx/html
 
 # Copy the custom NGINX configuration
-COPY public/nginx.conf /etc/nginx/conf.d/default.conf
+COPY public/nginx.conf /etc/nginx/nginx.conf
 
 # Install the Datadog tracing module.
 COPY ./install_datadog.sh /tmp/
