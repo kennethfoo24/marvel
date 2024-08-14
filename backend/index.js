@@ -260,6 +260,7 @@ app.get("/attackGKE", async (req, res) => {
         "X-Username": username,
       },
     });
+    logger.info({ message: `This is the response ${response}` });
     res.status(200).send(response.data);
   } catch (error) {
     logger.error("Error:", error);
