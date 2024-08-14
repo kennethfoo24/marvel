@@ -58,7 +58,7 @@ const SelectCharacter = () => {
     <div>
       <div>
         <Typography.Title style={{ color: "white" }}>
-          Welcome to Marvel, {username}
+          Assemble, {username}!
         </Typography.Title>
         <Typography.Title level={4} style={{ color: "white" }}>
           Please select your Avenger character
@@ -89,7 +89,10 @@ const SelectCharacter = () => {
               alt="Avenger image"
               width="150"
               height="150"
-              style={{ borderRadius: "50%", border: "2px solid black" }}
+              style={{
+                borderRadius: "5%",
+                border: "2px solid black",
+              }}
             />
           </div>
           <Typography.Title>{avenger.phrase}</Typography.Title>

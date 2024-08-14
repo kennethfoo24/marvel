@@ -20,9 +20,9 @@ const FormComponent = ({ setUsername }) => {
 
   return (
     <div className="container">
-      <div className="logo">MARVEL</div>
+      <div className="logo">PUPVENGERS</div>
       <div className="msg">
-        <div>Welcome to the Marvel Avenger Selector</div>
+        <div>Welcome to Puppy Avengers</div>
         <div>Enter your username:</div>
         <Form onFinish={handleSubmit}>
           <Form.Item name="username">
