@@ -94,6 +94,7 @@ app.post("/submit-username", async (req, res) => {
   } catch (error) {
     logger.error({ message: "Error inserting user", error: error });
     res.status(500).send("Error inserting user");
+    throw err;
   }
 });
 
@@ -138,6 +139,7 @@ app.get("/avenger/:name", async (req, res) => {
           error: error,
         });
         res.status(400).send("Error");
+        throw err;
       }
       break;
 
@@ -163,6 +165,7 @@ app.get("/users", async (req, res) => {
   } catch (error) {
     logger.error("Error fetching users:", error);
     res.status(500).send("Error fetching users");
+    throw err;
   }
 });
 
@@ -195,14 +198,14 @@ app.get("/status/:code", (req, res) => {
     switch (code) {
       case 400:
         error = new Error(
-          "This is a mockup error message for a bad request. The request could not be understood by the server due to malformed syntax."
+          "Error: HTTP 400 Bad Request. The request could not be understood by the server due to malformed syntax."
         );
         logger.warn(`Handling bad request: ${error.message}`, {
           stack: error.stack,
         });
         break;
       case 500:
-        error = new Error("Something went wrong");
+        error = new Error("Error: HTTP 500 Internal Server Error. Something went wrong");
         logger.error({
           message: error.message,
           status: code,
@@ -211,11 +214,14 @@ app.get("/status/:code", (req, res) => {
         break;
     }
     respBody = { error: error.message };
+    res.status(code).send(respBody);
+    // Pass the error to the error-tagging middleware
+    next(error);
   } else {
     respBody = { code: req.params.code };
     logger.info({ message: `Simulating HTTP ${code}`, code: code });
+    res.status(code).send(respBody);
   }
-  res.status(code).send(respBody);
 });
 
 // app.get("/attack", (req, res) => {
@@ -247,6 +253,7 @@ app.get("/attackGKE", async (req, res) => {
   } catch (error) {
     logger.error("Error:", error);
     res.status(400).send("Error fetching data from GKE");
+    throw err;
   }
 });
 
@@ -270,6 +277,7 @@ app.get("/thanos", (req, res) => {
     .catch((error) => {
       console.log(error);
       res.status(400).send("Error");
+      throw err;
     });
 });
 
@@ -306,7 +314,7 @@ app.post("/security-submit", (req, res) => {
     if (err) {
       logger.error("Database error:", err);
       res.status(500).send("Database error");
-      return;
+      throw err;
     }
     res.json(results);
   });
