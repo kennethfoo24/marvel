@@ -165,8 +165,20 @@ app.get("/users", async (req, res) => {
 
 app.get('/unhandled-exception', (req, res) => {
   // Throw an error that isn't caught
-  throw new Error('This is an unhandled exception!');
-});
+  try {
+    // Throw an error that isn't caught
+    throw new Error('This is an unhandled exception!');
+  } catch (err) {
+    // Get the current active span
+    const span = tracer.scope().active();
+
+    if (span) {
+      // Tag the span with error details
+      span.setTag('error', true);
+      span.setTag('error.message', err.message);
+      span.setTag('error.stack', err.stack);
+    }
+}});
 
 
 
