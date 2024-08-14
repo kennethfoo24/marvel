@@ -1,15 +1,19 @@
 import React from "react";
 import { Typography, Form, Input, Button } from "antd";
 import api from "../Api";
+import { useLocation } from "react-router-dom";
 
 const SQLInjection = () => {
   const [form] = Form.useForm();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const username = queryParams.get("username");
 
   const handleSubmit = async (values) => {
     const input = values.input?.trim();
     if (input !== undefined && input.length > 0) {
       try {
-        const resp = await api.sqlInjection(input);
+        const resp = await api.sqlInjection(input, username);
         console.log(resp);
       } catch (error) {
         console.error("Error:", error);

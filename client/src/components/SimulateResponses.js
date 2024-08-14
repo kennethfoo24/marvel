@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Modal, Typography } from "antd";
 import api from "../Api";
+import { useLocation } from "react-router-dom";
 
 const actions = [
   {
@@ -22,6 +23,9 @@ const actions = [
 ];
 
 const SimulateResponses = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const username = queryParams.get("username");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
@@ -31,7 +35,7 @@ const SimulateResponses = () => {
     try {
       setLoading(true);
       setOpen(true);
-      const resp = await api.simulateAttack(actions[index].action);
+      const resp = await api.simulateAttack(actions[index].action, username);
       console.log(resp);
       setData(resp);
       setLoading(false);

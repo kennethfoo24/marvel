@@ -2,6 +2,7 @@ import React from "react";
 import { Form, Input, Button } from "antd";
 import { datadogRum } from "@datadog/browser-rum";
 import { useNavigate } from "react-router-dom";
+import api from "./Api";
 
 const FormComponent = ({ setUsername }) => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const FormComponent = ({ setUsername }) => {
         name: username,
       });
       setUsername(username);
+      api.submitUsername(username);
       navigate(`/actions?username=${username}`);
     }
   };

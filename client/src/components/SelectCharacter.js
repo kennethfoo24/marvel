@@ -42,11 +42,11 @@ const SelectCharacter = () => {
   const username = queryParams.get("username");
 
   const handleClick = async (e) => {
-    const name = e.currentTarget.getAttribute("data-name");
+    const character = e.currentTarget.getAttribute("data-name");
     try {
       setLoading(true);
       setOpen(true);
-      const avenger = await api.selectCharacter(name);
+      const avenger = await api.selectCharacter(character, username);
       setAvenger(avenger);
       setLoading(false);
     } catch (error) {
