@@ -8,3 +8,10 @@ rulesets:
   - javascript-inclusive
   - javascript-node-security
   - jsx-react
+  - python-best-practices
+  - python-code-style
+  - python-django
+  - python-flask
+  - python-inclusive
+  - python-pandas
+  - python-security
