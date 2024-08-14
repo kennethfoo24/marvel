@@ -40,12 +40,13 @@ app.use((req, res, next) => {
   const username = req.body.username || req.query.username || req.headers['x-username'];
 
   if (username) {
-    tracer.setUser({
+    const user = {
       id: username, // Unique identifier for the user
       name: username,
-    });
+    };
+    tracer.setUser(user);
 
-    if (tracer.appsec.isUserBlocked(username)) {
+    if (tracer.appsec.isUserBlocked(user)) {
       return tracer.appsec.blockRequest(req, res); // Blocking response is sent
     }
 
