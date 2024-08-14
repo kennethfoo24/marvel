@@ -109,7 +109,7 @@
             const userInput = document.getElementById('userInput').value;
             const username = sessionStorage.getItem("username");
 
-            const response = await fetch('${BACKEND_URL}/security-submit', {
+            const response = await fetch(`${BACKEND_URL}/security-submit`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
