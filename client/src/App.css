@@ -1,0 +1,36 @@
+@import url(https://fonts.googleapis.com/css?family=Passion+One);
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  align-items: center;
+  background: radial-gradient(#d30215, black);
+  overflow: hidden;
+  color: white;
+}
+
+.container {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.logo {
+  font-size: 9em;
+  letter-spacing: -0.06em;
+  animation: hide 8s linear forwards;
+  padding: 0 0.2em;
+  line-height: 1;
+  border: 0.02em solid white;
+  font-family: "Passion One", impact;
+  color: white;
+  transform: scaleY(1.4);
+}
+
+.msg {
+  padding-top: 3em;
+}
