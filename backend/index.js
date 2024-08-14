@@ -30,7 +30,7 @@ app.options("*", cors()); // include before other routes
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, "public")));
+//app.use(express.static(path.join(__dirname, "public")));
 
 // Parse URL-encoded bodies (as sent by HTML forms)
 app.use(express.urlencoded({ extended: true }));
@@ -51,14 +51,14 @@ app.use((req, res, next) => {
     }
 
     logger.info({
-      message: "Request received",
+      message: "Request received and username is set",
       method: req.method,
       url: req.url,
       user: username,
     });
   } else {
     logger.info({
-      message: "Request received",
+      message: "Request received but username is unset",
       method: req.method,
       url: req.url,
     });
@@ -97,16 +97,8 @@ app.post("/submit-username", async (req, res) => {
 // Handle avenger selection
 app.get("/avenger/:name", async (req, res) => {
   const avengers = {
-    ironman: {
-      name: "Iron Man",
-      image: "ironman.png",
-      phrase: "I am Iron Man.",
-    },
-    captainamerica: {
-      name: "Captain America",
-      image: "captainamerica.png",
-      phrase: "I can do this all day.",
-    },
+    ironman: { name: "Iron Man", image: "ironman.png", phrase: "I am Iron Man." },
+    captainamerica: { name: "Captain America", image: "captainamerica.png", phrase: "I can do this all day." },
     thor: { name: "Thor", image: "thor.png", phrase: "Bring me Thanos!" },
     hulk: { name: "Hulk", image: "hulk.png", phrase: "Hulk smash!" },
     thanos: { name: "Thanos", image: "thanos.png", phrase: "INFINITY SNAP!" },
@@ -151,16 +143,9 @@ app.get("/avenger/:name", async (req, res) => {
       spanDefault.setTag("avenger", avenger.name);
       logger.error({ message: "AVENGERS ASSEMBLE !", avenger: avenger.name });
       logger.warn({ message: "I am... Iron Man.", avenger: avenger.name });
-      logger.info({
-        message: "Captain America Hail Hydra",
-        avenger: avenger.name,
-      });
+      logger.info({ message: "Captain America Hail Hydra", avenger: avenger.name });
       logger.info({ message: "Hulk Smashhh!", avenger: avenger.name });
-      logger.info({
-        message:
-          "Whosoever holds this hammer, if he be worthy, shall possess the power of Thor.",
-        avenger: avenger.name,
-      });
+      logger.info({ message: "Whosoever holds this hammer, if he be worthy, shall possess the power of Thor.", avenger: avenger.name });
       res.json(avenger);
   }
 });
@@ -204,6 +189,7 @@ app.get("/status/:code", (req, res) => {
     }
     respBody = { error: error.message };
   } else {
+    respBody = { code: req.params.code };
     logger.info({ message: `Simulating HTTP ${code}`, code: code });
   }
   res.status(code).send(respBody);
