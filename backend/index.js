@@ -163,6 +163,13 @@ app.get("/users", async (req, res) => {
   }
 });
 
+app.get('/unhandled-exception', (req, res) => {
+  // Throw an error that isn't caught
+  throw new Error('This is an unhandled exception!');
+});
+
+
+
 // Simulate HTTP status responses
 app.get("/status/:code", (req, res) => {
   let respBody = {};
