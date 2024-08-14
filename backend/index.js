@@ -132,7 +132,7 @@ app.get("/avenger/:name", async (req, res) => {
         logger.info({ message: "Thanos has arrived !", data: response.data });
         logger.info({ message: "Avenger selected", avenger: avenger.name });
         res.json(avenger);
-        throw new Error("Error : OMG! It's Thanos, everybody run !");
+        throw new Error("OMG! It's Thanos, everybody run !");
       } catch (error) {
         logger.error({
           message: "Error fetching Thanos response",
@@ -142,11 +142,14 @@ app.get("/avenger/:name", async (req, res) => {
         const span = tracer.scope().active();
         
         if (span) {
-          // Tag the span with error details
+          // Tag the span with error 
           span.setTag('error', true);
-          span.setTag('error.message', err.message);
-          span.setTag('error.stack', err.stack);
-        }}
+          span.setTag('error.message', error.message);
+          span.setTag('error.stack', error.stack);
+        }
+
+        throw error;
+      }
       break;
 
     default:
@@ -178,7 +181,7 @@ app.get('/unhandled-exception', (req, res) => {
   try {
     // Throw an error that isn't caught
     throw new Error('This is an unhandled exception!');
-  } catch (err) {
+  } catch (error) {
     // Get the current active span
     const span = tracer.scope().active();
 
@@ -190,7 +193,7 @@ app.get('/unhandled-exception', (req, res) => {
     }
 
     // Re-throw the error to keep it unhandled
-    throw err;
+    throw error;
   }
 });
 
@@ -268,7 +271,7 @@ app.get("/attackGKE", async (req, res) => {
 });
 
 // Error-handling middleware
-app.use((err, req, res, next) => {
+app.use((error, req, res, next) => {
   // Log the error using Winston
   logger.error({
     message: err.message,
@@ -281,18 +284,18 @@ app.use((err, req, res, next) => {
   if (span) {
     // Tag the error in the Datadog span
     span.setTag('error', true);
-    span.setTag('error.message', err.message);
-    span.setTag('error.stack', err.stack);
+    span.setTag('error.message', error.message);
+    span.setTag('error.stack', error.stack);
     span.setTag('http.status_code', res.statusCode || 500); // Default to 500 if status code is not set
   }
 
   // Pass the error to the next middleware
-  next(err);
+  next(error);
 
   // Respond with the error status and message
-  res.status(err.status || 500).json({
+  res.status(error.status || 500).json({
     error: {
-      message: err.message,
+      message: error.message,
     },
   });
 });
@@ -309,9 +312,9 @@ app.post("/security-submit", (req, res) => {
   const query = `${userInput}`;
   console.log("Executing query:", query);
 
-  pool.query(query, (err, results) => {
-    if (err) {
-      logger.error("Database error:", err);
+  pool.query(query, (error, results) => {
+    if (error) {
+      logger.error("Database error:", error);
       res.status(500).send("Database error");
     }
     res.json(results);
