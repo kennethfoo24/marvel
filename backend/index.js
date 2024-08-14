@@ -132,13 +132,21 @@ app.get("/avenger/:name", async (req, res) => {
         logger.info({ message: "Thanos has arrived !", data: response.data });
         logger.info({ message: "Avenger selected", avenger: avenger.name });
         res.json(avenger);
+        throw new Error("Error : OMG! It's Thanos, everybody run !");
       } catch (error) {
         logger.error({
           message: "Error fetching Thanos response",
           error: error,
         });
         res.status(400).send("Error");
-      }
+        const span = tracer.scope().active();
+        
+        if (span) {
+          // Tag the span with error details
+          span.setTag('error', true);
+          span.setTag('error.message', err.message);
+          span.setTag('error.stack', err.stack);
+        }}
       break;
 
     default:
@@ -197,7 +205,7 @@ app.get('/status/:code', (req, res) => {
     switch (code) {
       case 400:
         error = new Error(
-          'This is a mockup error message for a bad request. The request could not be understood by the server due to malformed syntax.'
+          'Error: HTTP 400 Bad Request. The request could not be understood by the server due to malformed syntax.'
         );
         logger.warn(`Handling bad request: ${error.message}`, {
           stack: error.stack,
@@ -212,7 +220,7 @@ app.get('/status/:code', (req, res) => {
         }
         break;
       case 500:
-        error = new Error('Something went wrong');
+        error = new Error('Error: HTTP 500 Internal Server Error. Something went very very wrong!');
         logger.error({
           message: error.message,
           status: code,
