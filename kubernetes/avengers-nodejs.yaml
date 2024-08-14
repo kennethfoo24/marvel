@@ -71,7 +71,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: status.hostIP
-        image: kennethfoo24/marvel:2149b8d81419bf633fd03913e9d9e41320003edd
+        image: kennethfoo24/marvel:d958aa0aead26ad19b2e3e5a2bce877c62633c8e
         imagePullPolicy: Always
         name: avengers-nodejs
         ports:

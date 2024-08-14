@@ -94,7 +94,6 @@ app.post("/submit-username", async (req, res) => {
   } catch (error) {
     logger.error({ message: "Error inserting user", error: error });
     res.status(500).send("Error inserting user");
-    throw err;
   }
 });
 
@@ -139,7 +138,6 @@ app.get("/avenger/:name", async (req, res) => {
           error: error,
         });
         res.status(400).send("Error");
-        throw err;
       }
       break;
 
@@ -165,7 +163,6 @@ app.get("/users", async (req, res) => {
   } catch (error) {
     logger.error("Error fetching users:", error);
     res.status(500).send("Error fetching users");
-    throw err;
   }
 });
 
@@ -190,53 +187,59 @@ app.get('/unhandled-exception', (req, res) => {
 });
 
 // Simulate HTTP status responses
-app.get("/status/:code", (req, res) => {
+app.get('/status/:code', (req, res) => {
   let respBody = {};
   const code = parseInt(req.params.code, 10);
+  const span = tracer.scope().active(); // Get the current active span
+
   if (code >= 400) {
     let error;
     switch (code) {
       case 400:
         error = new Error(
-          "Error: HTTP 400 Bad Request. The request could not be understood by the server due to malformed syntax."
+          'This is a mockup error message for a bad request. The request could not be understood by the server due to malformed syntax.'
         );
         logger.warn(`Handling bad request: ${error.message}`, {
           stack: error.stack,
         });
+
+        // Tagging the error in Datadog
+        if (span) {
+          span.setTag('error', true);
+          span.setTag('error.message', error.message);
+          span.setTag('error.stack', error.stack);
+          span.setTag('http.status_code', code);
+        }
         break;
       case 500:
-        error = new Error("Error: HTTP 500 Internal Server Error. Something went wrong");
+        error = new Error('Something went wrong');
         logger.error({
           message: error.message,
           status: code,
           stack: error.stack,
         });
+
+        // Tagging the error in Datadog
+        if (span) {
+          span.setTag('error', true);
+          span.setTag('error.message', error.message);
+          span.setTag('error.stack', error.stack);
+          span.setTag('http.status_code', code);
+        }
         break;
     }
     respBody = { error: error.message };
-    res.status(code).send(respBody);
-    // Pass the error to the error-tagging middleware
-    next(error);
   } else {
     respBody = { code: req.params.code };
     logger.info({ message: `Simulating HTTP ${code}`, code: code });
-    res.status(code).send(respBody);
-  }
-});
 
-// app.get("/attack", (req, res) => {
-//   axios
-//     .get("https://cloudrunpythonbe-n2at3rsn5a-uc.a.run.app/api/getRequest", {
-//       headers: { "User-Agent": "dd-test-scanner-log" },
-//     })
-//     .then((response) => {
-//       res.status(200).send(response.data);
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//       res.status(400).send("Error");
-//     });
-// });
+    // Tagging successful response in Datadog
+    if (span) {
+      span.setTag('http.status_code', code);
+    }
+  }
+  res.status(code).send(respBody);
+});
 
 // Optimized route for attackGKE
 app.get("/attackGKE", async (req, res) => {
@@ -253,32 +256,7 @@ app.get("/attackGKE", async (req, res) => {
   } catch (error) {
     logger.error("Error:", error);
     res.status(400).send("Error fetching data from GKE");
-    throw err;
   }
-});
-
-app.get("/thanos", (req, res) => {
-  const avengers = {
-    thanos: {
-      name: "Thanos",
-      image: "thanos.png",
-      phrase: "INFINITY SNAP!",
-    },
-  };
-  const avenger = avengers[req.params.name];
-  axios
-    .get("http://34.67.3.96:80/delayed-response", {})
-    .then((response) => {
-      res.status(200).send(response.data);
-      const span = tracer.scope().active();
-      span.setTag("avenger", avenger.name);
-      res.json(avenger);
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(400).send("Error");
-      throw err;
-    });
 });
 
 // Error-handling middleware
@@ -289,6 +267,19 @@ app.use((err, req, res, next) => {
     status: err.status,
     stack: err.stack,
   });
+
+  const span = tracer.scope().active(); // Get the current active span
+
+  if (span) {
+    // Tag the error in the Datadog span
+    span.setTag('error', true);
+    span.setTag('error.message', err.message);
+    span.setTag('error.stack', err.stack);
+    span.setTag('http.status_code', res.statusCode || 500); // Default to 500 if status code is not set
+  }
+
+  // Pass the error to the next middleware
+  next(err);
 
   // Respond with the error status and message
   res.status(err.status || 500).json({
@@ -314,7 +305,6 @@ app.post("/security-submit", (req, res) => {
     if (err) {
       logger.error("Database error:", err);
       res.status(500).send("Database error");
-      throw err;
     }
     res.json(results);
   });
