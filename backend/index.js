@@ -1,16 +1,16 @@
 const express = require("express");
 const path = require("path");
 const logger = require("./logger");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
-const tracer = require('dd-trace').init({
-  appsec: true
+const tracer = require("dd-trace").init({
+  appsec: true,
 });
 const axios = require("axios").default;
-const { Pool } = require('pg');
+const { Pool } = require("pg");
 const cors = require("cors");
-require('dotenv').config(); // Using dotenv for environment variables
+require("dotenv").config(); // Using dotenv for environment variables
 
 // Database connection configuration using environment variables
 const pool = new Pool({
@@ -25,7 +25,7 @@ const pool = new Pool({
 });
 
 app.use(cors());
-app.options('*', cors()) // include before other routes
+app.options("*", cors()); // include before other routes
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -37,8 +37,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Middleware to log requests and add user information to traces
 app.use((req, res, next) => {
-  const username = req.headers['x-username'];
-  
+  const username = req.headers["x-username"];
+
   if (username) {
     tracer.setUser({
       id: username, // Unique identifier for the user
@@ -62,11 +62,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Function to simulate errors with stack trace
-const simulateError = (message) => {
-  throw new Error(message);
-};
-
 // Serve the homepage
 app.get("/", (req, res) => {
   logger.info({ message: "Backend server is running" });
@@ -79,26 +74,40 @@ app.post("/submit-username", async (req, res) => {
   logger.info({ message: "Username submitted", username: username });
 
   try {
-    const results = await pool.query('INSERT INTO users (username) VALUES ($1) RETURNING *', [username]);
-    logger.info({ message: 'Username saved', username: results.rows[0].username });
+    const results = await pool.query(
+      "INSERT INTO users (username) VALUES ($1) RETURNING *",
+      [username]
+    );
+    logger.info({
+      message: "Username saved",
+      username: results.rows[0].username,
+    });
     res.redirect(`/select-avenger?username=${username}`);
   } catch (error) {
-    logger.error({ message: 'Error inserting user', error: error });
-    res.status(500).send('Error inserting user');
+    logger.error({ message: "Error inserting user", error: error });
+    res.status(500).send("Error inserting user");
   }
 });
 
 // Handle avenger selection
 app.get("/avenger/:name", async (req, res) => {
-  const avengers = { 
-    ironman: { name: "Iron Man", image: "ironman.png", phrase: "I am Iron Man." },
-    captainamerica: { name: "Captain America", image: "captainamerica.png", phrase: "I can do this all day." },
+  const avengers = {
+    ironman: {
+      name: "Iron Man",
+      image: "ironman.png",
+      phrase: "I am Iron Man.",
+    },
+    captainamerica: {
+      name: "Captain America",
+      image: "captainamerica.png",
+      phrase: "I can do this all day.",
+    },
     thor: { name: "Thor", image: "thor.png", phrase: "Bring me Thanos!" },
     hulk: { name: "Hulk", image: "hulk.png", phrase: "Hulk smash!" },
     thanos: { name: "Thanos", image: "thanos.png", phrase: "INFINITY SNAP!" },
   };
   const avenger = avengers[req.params.name];
-  
+
   if (!avenger) {
     logger.error({ message: "Avenger not found", avenger: req.params.name });
     return res.status(404).send("Avenger not found");
@@ -109,14 +118,25 @@ app.get("/avenger/:name", async (req, res) => {
       try {
         const span = tracer.scope().active();
         span.setTag("avenger", avenger.name);
-        const response = await axios.get("http://34.67.3.96:80/delayed-response");
-        logger.error({ message: "OMG! It's Thanos, everybody run !", avenger: avenger.name });
-        logger.warn({ message: "You should have gone for the head !", avenger: avenger.name });
+        const response = await axios.get(
+          "http://34.67.3.96:80/delayed-response"
+        );
+        logger.error({
+          message: "OMG! It's Thanos, everybody run !",
+          avenger: avenger.name,
+        });
+        logger.warn({
+          message: "You should have gone for the head !",
+          avenger: avenger.name,
+        });
         logger.info({ message: "Thanos has arrived !", data: response.data });
         logger.info({ message: "Avenger selected", avenger: avenger.name });
         res.json(avenger);
       } catch (error) {
-        logger.error({ message: "Error fetching Thanos response", error: error });
+        logger.error({
+          message: "Error fetching Thanos response",
+          error: error,
+        });
         res.status(400).send("Error");
       }
       break;
@@ -126,60 +146,62 @@ app.get("/avenger/:name", async (req, res) => {
       spanDefault.setTag("avenger", avenger.name);
       logger.error({ message: "AVENGERS ASSEMBLE !", avenger: avenger.name });
       logger.warn({ message: "I am... Iron Man.", avenger: avenger.name });
-      logger.info({ message: "Captain America Hail Hydra", avenger: avenger.name });
+      logger.info({
+        message: "Captain America Hail Hydra",
+        avenger: avenger.name,
+      });
       logger.info({ message: "Hulk Smashhh!", avenger: avenger.name });
-      logger.info({ message: "Whosoever holds this hammer, if he be worthy, shall possess the power of Thor.", avenger: avenger.name });
+      logger.info({
+        message:
+          "Whosoever holds this hammer, if he be worthy, shall possess the power of Thor.",
+        avenger: avenger.name,
+      });
       res.json(avenger);
   }
 });
 
 // Endpoint to get all users
-app.get('/users', async (req, res) => {
+app.get("/users", async (req, res) => {
   logger.info({ message: "Received request for /users" });
   try {
-    const results = await pool.query('SELECT * FROM users');
-    logger.info({ message: 'Users fetched', users: results.rows });
+    const results = await pool.query("SELECT * FROM users");
+    logger.info({ message: "Users fetched", users: results.rows });
     res.status(200).json(results.rows);
   } catch (error) {
-    logger.error('Error fetching users:', error);
-    res.status(500).send('Error fetching users');
+    logger.error("Error fetching users:", error);
+    res.status(500).send("Error fetching users");
   }
 });
 
 // Simulate HTTP status responses
 app.get("/status/:code", (req, res) => {
+  let respBody = {};
   const code = parseInt(req.params.code, 10);
-  if (code === 400) {
-    const error = simulateError(
-      "This is a mockup error message for a bad request. The request could not be understood by the server due to malformed syntax."
-    );
-    logger.warn(`Handling bad request: ${error.message}`, {
-      stack: error.stack,
-    });
-  } else if (code === 500) {
-    // Simulate an error by throwing it
-    const error = new Error("Something went wrong");
-    error.status = 500;
-
-    // Log the error using Winston
-    logger.error({
-      message: error.message,
-      status: error.status,
-      stack: error.stack,
-    });
-
-    // Respond with the error status and message
-    res.status(error.status).json({
-      error: {
-        message: error.message,
-      },
-    });
-    //const error = simulateError('This is a mockup error message for an internal server error. An unexpected condition was encountered.', 'InternalServerError');
-    //logger.error(`Handling server error: ${error.message}`, { kind: error.kind, stack: error.stack });
+  if (code >= 400) {
+    let error;
+    switch (code) {
+      case 400:
+        error = new Error(
+          "This is a mockup error message for a bad request. The request could not be understood by the server due to malformed syntax."
+        );
+        logger.warn(`Handling bad request: ${error.message}`, {
+          stack: error.stack,
+        });
+        break;
+      case 500:
+        error = new Error("Something went wrong");
+        logger.error({
+          message: error.message,
+          status: code,
+          stack: error.stack,
+        });
+        break;
+    }
+    respBody = { error: error.message };
   } else {
     logger.info({ message: `Simulating HTTP ${code}`, code: code });
   }
-  res.status(code).send(`HTTP ${code} - ${require("http").STATUS_CODES[code]}`);
+  res.status(code).send(respBody);
 });
 
 // app.get("/attack", (req, res) => {
@@ -197,19 +219,20 @@ app.get("/status/:code", (req, res) => {
 // });
 
 // Optimized route for attackGKE
-app.get('/attackGKE', async (req, res) => {
-  const username = req.body.username || req.query.username || req.headers['x-username'];
+app.get("/attackGKE", async (req, res) => {
+  const username =
+    req.body.username || req.query.username || req.headers["x-username"];
   try {
-    const response = await axios.get('http://35.193.52.148:80/api/getRequest', {
-      headers: { 
-        'User-Agent': 'dd-test-scanner-log',
-        'X-Username': username
+    const response = await axios.get("http://35.193.52.148:80/api/getRequest", {
+      headers: {
+        "User-Agent": "dd-test-scanner-log",
+        "X-Username": username,
       },
     });
     res.status(200).send(response.data);
   } catch (error) {
-    logger.error('Error:', error);
-    res.status(400).send('Error fetching data from GKE');
+    logger.error("Error:", error);
+    res.status(400).send("Error fetching data from GKE");
   }
 });
 
