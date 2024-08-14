@@ -45,6 +45,10 @@ app.use((req, res, next) => {
       name: username,
     });
 
+    if (tracer.appsec.isUserBlocked(username)) {
+      return tracer.appsec.blockRequest(req, res); // Blocking response is sent
+    }
+
     logger.info({
       message: "Request received",
       method: req.method,
