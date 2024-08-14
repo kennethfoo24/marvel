@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const logger = require("./logger");
+const errorTagger = require('./error-tagger'); // Adjust the path accordingly
 const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
@@ -24,16 +25,18 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
 });
 
+// Apply CORS middleware globally for all routes
 app.use(cors());
-app.options("*", cors()); // include before other routes
 
+// Apply body parser middleware for parsing URL-encoded bodies and JSON
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-// Serve static files from the 'public' directory
-//app.use(express.static(path.join(__dirname, "public")));
 
-// Parse URL-encoded bodies (as sent by HTML forms)
-app.use(express.urlencoded({ extended: true }));
+// Serve static files from the 'public' directory
+//app.use(express.static(path.join(__dirname, 'public')));
+
+// Apply error tagging middleware
+app.use(errorTagger);
 
 // Middleware to log requests and add user information to traces
 app.use((req, res, next) => {
@@ -182,9 +185,6 @@ app.get('/unhandled-exception', (req, res) => {
     throw err;
   }
 });
-
-
-
 
 // Simulate HTTP status responses
 app.get("/status/:code", (req, res) => {
