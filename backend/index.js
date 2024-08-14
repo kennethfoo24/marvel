@@ -164,7 +164,6 @@ app.get("/users", async (req, res) => {
 });
 
 app.get('/unhandled-exception', (req, res) => {
-  // Throw an error that isn't caught
   try {
     // Throw an error that isn't caught
     throw new Error('This is an unhandled exception!');
@@ -178,7 +177,12 @@ app.get('/unhandled-exception', (req, res) => {
       span.setTag('error.message', err.message);
       span.setTag('error.stack', err.stack);
     }
-}});
+
+    // Re-throw the error to keep it unhandled
+    throw err;
+  }
+});
+
 
 
 
