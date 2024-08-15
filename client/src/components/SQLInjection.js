@@ -1,10 +1,13 @@
-import React from "react";
-import { Typography, Form, Input, Button } from "antd";
+import React, { useState } from "react";
+import { Typography, Form, Input, Button, Modal } from "antd";
 import api from "../Api";
 import { useLocation } from "react-router-dom";
 
 const SQLInjection = () => {
   const [form] = Form.useForm();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState("");
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const username = queryParams.get("username");
@@ -13,8 +16,12 @@ const SQLInjection = () => {
     const input = values.input?.trim();
     if (input !== undefined && input.length > 0) {
       try {
+        setLoading(true);
+        setOpen(true);
         const resp = await api.sqlInjection(input, username);
         console.log(resp);
+        setData(resp);
+        setLoading(false);
       } catch (error) {
         console.error("Error:", error);
       }
@@ -46,6 +53,17 @@ const SQLInjection = () => {
           </Button>
         </Form.Item>
       </Form>
+      <Modal
+        loading={loading}
+        open={open}
+        footer=""
+        onCancel={() => setOpen(false)}
+      >
+        <div>
+          <Typography.Title>HTTP Response</Typography.Title>
+          <div>{data}</div>
+        </div>
+      </Modal>
     </div>
   );
 };

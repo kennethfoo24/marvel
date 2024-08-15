@@ -45,7 +45,7 @@ const API = {
         "X-Username": username,
       },
     });
-    const res = await response.json();
+    const res = response.text();
     return res;
   },
 };
