@@ -12,6 +12,21 @@ spec:
     metadata:
       labels:
         app: postgres
+      annotations:
+        ad.datadoghq.com/postgres.checks: |
+          {
+            "postgresql": {
+              "instances": [
+                {
+                  "host": "%%host%%",
+                  "port": "5432",
+                  "username": "datadog",
+                  "password":"securepassword",
+                  "dbm": "true"
+                }
+              ]
+            }
+          }  
     spec:
       containers:
       - name: postgres
@@ -20,9 +35,6 @@ spec:
           requests:
             memory: "4Gi"
             cpu: "2"
-          limits:
-            memory: "8Gi"
-            cpu: "4"
         ports:
         - containerPort: 5432
         env:
