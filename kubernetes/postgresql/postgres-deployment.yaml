@@ -15,13 +15,13 @@ spec:
       annotations:
         ad.datadoghq.com/postgres.checks: |
           {
-            "postgresql": {
+            "postgres": {
               "instances": [
                 {
                   "host": "%%host%%",
                   "port": "5432",
                   "username": "datadog",
-                  "password":"securepassword",
+                  "password": "securepassword",
                   "dbm": "true"
                 }
               ]
@@ -35,6 +35,9 @@ spec:
           requests:
             memory: "4Gi"
             cpu: "2"
+          limits:
+            memory: "8Gi"
+            cpu: "4"          
         ports:
         - containerPort: 5432
         env:
