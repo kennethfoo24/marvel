@@ -313,7 +313,7 @@ app.post("/security-submit", (req, res) => {
   pool.query(query, (error, results) => {
     if (error) {
       logger.error("Database error:", error);
-      res.status(500).send("Database error");
+      res.status(500).send("Attack Triggered: SQL Injection Successful");
     }
     res.json(results);
   });
