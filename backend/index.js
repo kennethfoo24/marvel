@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 const logger = require("./logger");
-const errorTagger = require('./error-tagger'); // Adjust the path accordingly
+const errorTagger = require("./error-tagger"); // Adjust the path accordingly
 const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
@@ -40,7 +40,8 @@ app.use(errorTagger);
 
 // Middleware to log requests and add user information to traces
 app.use((req, res, next) => {
-  const username = req.body.username || req.query.username || req.headers['x-username'];
+  const username =
+    req.body.username || req.query.username || req.headers["x-username"];
 
   if (username) {
     const user = {
@@ -100,8 +101,16 @@ app.post("/submit-username", async (req, res) => {
 // Handle avenger selection
 app.get("/avenger/:name", async (req, res) => {
   const avengers = {
-    ironman: { name: "Iron Man", image: "ironman.png", phrase: "I am Iron Man." },
-    captainamerica: { name: "Captain America", image: "captainamerica.png", phrase: "I can do this all day." },
+    ironman: {
+      name: "Iron Man",
+      image: "ironman.png",
+      phrase: "I am Iron Man.",
+    },
+    captainamerica: {
+      name: "Captain America",
+      image: "captainamerica.png",
+      phrase: "I can do this all day.",
+    },
     thor: { name: "Thor", image: "thor.png", phrase: "Bring me Thanos!" },
     hulk: { name: "Hulk", image: "hulk.png", phrase: "Hulk smash!" },
     thanos: { name: "Thanos", image: "thanos.png", phrase: "INFINITY SNAP!" },
@@ -137,15 +146,16 @@ app.get("/avenger/:name", async (req, res) => {
           message: "Error fetching Thanos response",
           error: error,
         });
-        res.status(400).send("Error");
         const span = tracer.scope().active();
-        
+
         if (span) {
-          // Tag the span with error 
-          span.setTag('error', true);
-          span.setTag('error.message', error.message);
-          span.setTag('error.stack', error.stack);
+          // Tag the span with error
+          span.setTag("error", true);
+          span.setTag("error.message", error.message);
+          span.setTag("error.stack", error.stack);
         }
+      } finally {
+        res.status(400).send("Error");
       }
       break;
 
@@ -154,9 +164,16 @@ app.get("/avenger/:name", async (req, res) => {
       spanDefault.setTag("avenger", avenger.name);
       logger.error({ message: "AVENGERS ASSEMBLE !", avenger: avenger.name });
       logger.warn({ message: "I am... Iron Man.", avenger: avenger.name });
-      logger.info({ message: "Captain America Hail Hydra", avenger: avenger.name });
+      logger.info({
+        message: "Captain America Hail Hydra",
+        avenger: avenger.name,
+      });
       logger.info({ message: "Hulk Smashhh!", avenger: avenger.name });
-      logger.info({ message: "Whosoever holds this hammer, if he be worthy, shall possess the power of Thor.", avenger: avenger.name });
+      logger.info({
+        message:
+          "Whosoever holds this hammer, if he be worthy, shall possess the power of Thor.",
+        avenger: avenger.name,
+      });
       res.json(avenger);
   }
 });
@@ -174,19 +191,19 @@ app.get("/users", async (req, res) => {
   }
 });
 
-app.get('/unhandled-exception', (req, res) => {
+app.get("/unhandled-exception", (req, res) => {
   try {
     // Throw an error that isn't caught
-    throw new Error('This is an unhandled exception!');
+    throw new Error("This is an unhandled exception!");
   } catch (error) {
     // Get the current active span
     const span = tracer.scope().active();
 
     if (span) {
       // Tag the span with error details
-      span.setTag('error', true);
-      span.setTag('error.message', err.message);
-      span.setTag('error.stack', err.stack);
+      span.setTag("error", true);
+      span.setTag("error.message", err.message);
+      span.setTag("error.stack", err.stack);
     }
 
     // Re-throw the error to keep it unhandled
@@ -195,7 +212,7 @@ app.get('/unhandled-exception', (req, res) => {
 });
 
 // Simulate HTTP status responses
-app.get('/status/:code', (req, res) => {
+app.get("/status/:code", (req, res) => {
   let respBody = {};
   const code = parseInt(req.params.code, 10);
   const span = tracer.scope().active(); // Get the current active span
@@ -205,7 +222,7 @@ app.get('/status/:code', (req, res) => {
     switch (code) {
       case 400:
         error = new Error(
-          'Error: HTTP 400 Bad Request. The request could not be understood by the server due to malformed syntax.'
+          "Error: HTTP 400 Bad Request. The request could not be understood by the server due to malformed syntax."
         );
         logger.warn(`Handling bad request: ${error.message}`, {
           stack: error.stack,
@@ -213,14 +230,16 @@ app.get('/status/:code', (req, res) => {
 
         // Tagging the error in Datadog
         if (span) {
-          span.setTag('error', true);
-          span.setTag('error.message', error.message);
-          span.setTag('error.stack', error.stack);
-          span.setTag('http.status_code', code);
+          span.setTag("error", true);
+          span.setTag("error.message", error.message);
+          span.setTag("error.stack", error.stack);
+          span.setTag("http.status_code", code);
         }
         break;
       case 500:
-        error = new Error('Error: HTTP 500 Internal Server Error. Something went very very wrong!');
+        error = new Error(
+          "Error: HTTP 500 Internal Server Error. Something went very very wrong!"
+        );
         logger.error({
           message: error.message,
           status: code,
@@ -229,10 +248,10 @@ app.get('/status/:code', (req, res) => {
 
         // Tagging the error in Datadog
         if (span) {
-          span.setTag('error', true);
-          span.setTag('error.message', error.message);
-          span.setTag('error.stack', error.stack);
-          span.setTag('http.status_code', code);
+          span.setTag("error", true);
+          span.setTag("error.message", error.message);
+          span.setTag("error.stack", error.stack);
+          span.setTag("http.status_code", code);
         }
         break;
     }
@@ -243,7 +262,7 @@ app.get('/status/:code', (req, res) => {
 
     // Tagging successful response in Datadog
     if (span) {
-      span.setTag('http.status_code', code);
+      span.setTag("http.status_code", code);
     }
   }
   res.status(code).send(respBody);
@@ -281,10 +300,10 @@ app.use((error, req, res, next) => {
 
   if (span) {
     // Tag the error in the Datadog span
-    span.setTag('error', true);
-    span.setTag('error.message', error.message);
-    span.setTag('error.stack', error.stack);
-    span.setTag('http.status_code', res.statusCode || 500); // Default to 500 if status code is not set
+    span.setTag("error", true);
+    span.setTag("error.message", error.message);
+    span.setTag("error.stack", error.stack);
+    span.setTag("http.status_code", res.statusCode || 500); // Default to 500 if status code is not set
   }
 
   // Pass the error to the next middleware
