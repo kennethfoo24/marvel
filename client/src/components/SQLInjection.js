@@ -43,13 +43,13 @@ const SQLInjection = () => {
           <Input size="large" />
         </Form.Item>
         <Form.Item>
-          <Button className="button" size="large" htmlType="submit">
-            Submit
+          <Button className="button" size="large" onClick={handleAutofill}>
+            Autofill SQL Injection
           </Button>
         </Form.Item>
         <Form.Item>
-          <Button className="button" size="large" onClick={handleAutofill}>
-            Autofill SQL Injection
+          <Button className="button" size="large" htmlType="submit">
+            Submit
           </Button>
         </Form.Item>
       </Form>

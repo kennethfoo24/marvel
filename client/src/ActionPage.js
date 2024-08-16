@@ -37,7 +37,7 @@ const ActionPage = () => {
         {tabItems.map((item) => (
           <Tabs.Tab
             style={{
-              "--title-font-size": "30px",
+              "--title-font-size": "1.5em",
               "--active-title-color": "white",
               color: "white",
             }}
