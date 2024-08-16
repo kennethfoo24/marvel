@@ -30,11 +30,8 @@ const API = {
         "X-Username": username,
       },
     });
-    const res = await response.json();
-    return {
-      ...res,
-      status: response.status,
-    };
+    const res = await response.text();
+    return res;
   },
 
   sqlInjection: async (input, username) => {
