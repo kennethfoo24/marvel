@@ -20,7 +20,7 @@ body {
 }
 
 .logo {
-  font-size: 9em;
+  font-size: 5em;
   letter-spacing: -0.06em;
   animation: hide 8s linear forwards;
   padding: 0 0.2em;
@@ -33,4 +33,5 @@ body {
 
 .msg {
   padding-top: 3em;
+  color: white;
 }

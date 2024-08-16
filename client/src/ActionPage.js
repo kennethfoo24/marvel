@@ -22,7 +22,7 @@ const tabItems = [
 
 const ActionPage = () => {
   const swiperRef = useRef(null);
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   return (
     <div>
