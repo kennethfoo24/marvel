@@ -140,7 +140,8 @@ app.get("/avenger/:name", async (req, res) => {
         });
         logger.info({ message: "Thanos has arrived !", data: response.data });
         logger.info({ message: "Avenger selected", avenger: avenger.name });
-        res.json(avenger);
+
+        throw new Error("ReferenceError: x is not defined");
       } catch (error) {
         logger.error({
           message: "Error fetching Thanos response",
@@ -155,7 +156,7 @@ app.get("/avenger/:name", async (req, res) => {
           span.setTag("error.stack", error.stack);
         }
       } finally {
-        res.status(400).send("Error");
+        res.status(200).json(avenger);
       }
       break;
 
