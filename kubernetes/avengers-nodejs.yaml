@@ -66,12 +66,14 @@ spec:
           value: "1"
         - name: DD_IAST_ENABLED
           value: "true"
+        - name: DD_DBM_PROPAGATION_MODE
+          value: "full"
         - name: DD_AGENT_HOST
           valueFrom:
             fieldRef:
               apiVersion: v1
               fieldPath: status.hostIP
-        image: kennethfoo24/marvel:5f765e40b9ab77dcf86f662afc2644d94e370242
+        image: kennethfoo24/marvel:3841c2e759c3fd3080488fa03075894fca9592ae
         imagePullPolicy: Always
         name: avengers-nodejs
         ports:
