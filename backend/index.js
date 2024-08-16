@@ -141,7 +141,9 @@ app.get("/avenger/:name", async (req, res) => {
         logger.info({ message: "Thanos has arrived !", data: response.data });
         logger.info({ message: "Avenger selected", avenger: avenger.name });
 
-        throw new Error("ReferenceError: x is not defined");
+        const errResponse = await axios.get(
+          "http://35.193.52.148/api/getErrorRequest"
+        );
       } catch (error) {
         logger.error({
           message: "Error fetching Thanos response",
