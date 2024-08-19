@@ -1,4 +1,5 @@
-const BASE_URL = ""; // specified proxy url in package.json
+const BASE_URL = "https://dd-demo-sg.one/api";
+// const BASE_URL = "";
 
 const API = {
   submitUsername: async (username) => {
