@@ -2,7 +2,7 @@ name: Docker Image CI Backend
 
 on:
   push:
-    branches: [ "main", "frontend-backend" ]
+    branches: [ "*" ]
   pull_request:
     branches: [ "main" ]
 
