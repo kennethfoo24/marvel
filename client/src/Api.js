@@ -1,4 +1,4 @@
-const BASE_URL = "http://34.27.150.82";
+const BASE_URL = "https://kenneth-marvel-n2at3rsn5a-uc.a.run.app";
 // const BASE_URL = "";
 
 const API = {
