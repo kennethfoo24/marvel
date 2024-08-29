@@ -1,4 +1,4 @@
-const BASE_URL = "https://dd-demo-sg.one/api";
+const BASE_URL = "http://34.27.150.82";
 // const BASE_URL = "";
 
 const API = {
