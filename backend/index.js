@@ -13,6 +13,20 @@ const { Pool } = require("pg");
 const cors = require("cors");
 require("dotenv").config(); // Using dotenv for environment variables
 
+const originalConsoleLog = console.log;
+
+console.log = function (...args) {
+    const span = tracer.scope().active();
+    if (span) {
+        const traceId = span.context().toTraceId();
+        const spanId = span.context().toSpanId();
+        // Prepend the trace information to the log message
+        originalConsoleLog(`[trace_id=${traceId}] [span_id=${spanId}]`, ...args);
+    } else {
+        originalConsoleLog(...args);
+    }
+};
+
 // Database connection configuration using environment variables
 const pool = new Pool({
   user: process.env.DB_USER,
