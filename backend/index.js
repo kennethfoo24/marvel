@@ -1,3 +1,6 @@
+const tracer = require("dd-trace").init({
+  appsec: true,
+});
 const express = require("express");
 const path = require("path");
 const logger = require("./logger");
@@ -5,9 +8,6 @@ const errorTagger = require("./error-tagger"); // Adjust the path accordingly
 const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
-const tracer = require("dd-trace").init({
-  appsec: true,
-});
 const axios = require("axios").default;
 const { Pool } = require("pg");
 const cors = require("cors");
