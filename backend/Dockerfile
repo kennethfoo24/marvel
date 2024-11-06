@@ -28,7 +28,7 @@ ENV DD_TAGS="git.repository_url:github.com/kennethfoo24/marvel,git.commit.sha:${
 # datadog unified service tagging
 ENV DD_SERVICE="avengers-nodejs"
 ENV DD_ENV="avengers-app"
-ENV DD_VERSION="phase:2"
+ENV DD_VERSION="phase:2-${DD_GIT_COMMIT_SHA}"
 ENV DD_TRACE_ENABLED=true
 ENV DD_SITE='datadoghq.com'
 ENV DD_TRACE_PROPAGATION_STYLE='datadog'
