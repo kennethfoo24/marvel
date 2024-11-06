@@ -19,7 +19,11 @@ COPY backend/. .
 
 # Link source code
 ARG DD_GIT_COMMIT_SHA
+ARG DD_GIT_REPOSITORY_URL
+ENV DD_GIT_REPOSITORY_URL=${DD_GIT_REPOSITORY_URL}
+ENV DD_GIT_COMMIT_SHA=${DD_GIT_COMMIT_SHA}
 ENV DD_TAGS="git.repository_url:github.com/kennethfoo24/marvel,git.commit.sha:${DD_GIT_COMMIT_SHA}"
+
 
 # datadog unified service tagging
 ENV DD_SERVICE="avengers-nodejs"
