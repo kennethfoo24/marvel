@@ -39,16 +39,9 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
 });
 
-const corsOptions = {
-  origin: "https://kenneth-marvel-958371799887.us-central1.run.app",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-
-app.use(cors(corsOptions));
 
 // Apply CORS middleware globally for all routes
-// app.use(cors());
+app.use(cors());
 
 
 
