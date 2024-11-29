@@ -1,4 +1,4 @@
-const BASE_URL = "https://dd-demo-sg.one/api";
+const BASE_URL = "https://https://kenneth-marvel-958371799887.us-central1.run.app/api";
 // const BASE_URL = "";
 
 const API = {
