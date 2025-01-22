@@ -1,0 +1,64 @@
+version: "3"
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  producer:
+    build: .
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_BROKER: kafka:9092
+      DD_TRACE_DEBUG: 1
+      DD_AGENT_HOST: datadog-agent
+      DD_SERVICE: producer
+      DD_PROFILING_ENABLED: 1
+      DD_DATA_STREAMS_ENABLED: "true"
+
+  consumer:
+    build: .
+    command: node consumer.js
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_BROKER: kafka:9092
+      DD_TRACE_DEBUG: 1
+      DD_AGENT_HOST: datadog-agent
+      DD_SERVICE: consumer
+      DD_PROFILING_ENABLED: 1
+      DD_DATA_STREAMS_ENABLED: "true"
+
+  datadog-agent:
+    image: datadog/agent:latest
+    env_file:
+      - ~/sandbox.docker.env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+    ports:
+      - 8126:8126/tcp
+      - 8125:8125/udp
+    environment:
+      - DD_APM_ENABLED=true
+      - DD_APM_NON_LOCAL_TRAFFIC=true
+      - DD_LOG_LEVEL=TRACE
+      - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
+      - DD_AC_EXCLUDE=name:datadog-agent
+      - DD_LOGS_ENABLED=TRUE
