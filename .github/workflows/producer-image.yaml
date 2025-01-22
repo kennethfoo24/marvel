@@ -1,4 +1,4 @@
-name: Docker Image CI Backend
+name: Docker Image CI Producer
 
 on:
   push:
