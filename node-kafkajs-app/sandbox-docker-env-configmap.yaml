@@ -1,9 +1,0 @@
-apiVersion: v1
-data:
-  DD_API_KEY: bb51905aa9bb1f4bcb3db4d6af5208be
-  DD_SITE: datadoghq.com
-kind: ConfigMap
-metadata:
-  labels:
-    io.kompose.service: datadog-agent-sandbox-docker-env
-  name: sandbox-docker-env
