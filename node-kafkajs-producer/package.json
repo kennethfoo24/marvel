@@ -1,0 +1,20 @@
+{
+  "name": "kafka-js-app",
+  "version": "1.0.0",
+  "description": "A sample project to demonstrate Kafka with KafkaJS",
+  "main": "producer.js",
+  "scripts": {
+    "start": "node producer.js",
+    "test": "node consumer.js"
+  },
+  "dependencies": {
+    "kafkajs": "^2.0.0",
+    "dd-trace": "^5.17.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=6.0.0"
+  },
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT"
+}
