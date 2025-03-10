@@ -38,7 +38,7 @@ https://excalidraw.com/#json=WBGj1vSwbqhCb6YusVD7J,Wp-D5roxnhQvVczIZ-G22A
 
 ### Note
 
-1.create cloud dns
+1. create cloud dns
 
 2. update cloud dns to include A record, dont need for AAAA record. For both, point to the frontend public IP of the load balancer.
 -- www.dd-demo-sg.com
