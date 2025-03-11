@@ -19,7 +19,7 @@ The web application is built with the following elements:
 ## Demo
 
 ### UI
-https://dd-demo-sg.one/
+https://dd-demo-sg.com/
 
 ![App Screenshot](https://i.imgur.com/8jwCoTY.png)
 
