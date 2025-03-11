@@ -27,6 +27,6 @@ jobs:
         registry: docker.io
         dockerfile: backend/Dockerfile
         tags: ${{ github.sha }}
-        buildArgs: 'DD_GIT_REPOSITORY_URL=$(git config --get remote.origin.url),DD_GIT_COMMIT_SHA=$(git rev-parse HEAD)'        
+        buildArgs: 'DD_GIT_REPOSITORY_URL=github.com/kennethfoo24/marvel,DD_GIT_COMMIT_SHA=$(git rev-parse HEAD)'        
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
