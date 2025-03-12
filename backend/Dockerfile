@@ -15,7 +15,7 @@ COPY backend/package*.json ./
 RUN npm install
 
 # Copy the rest of the application code
-COPY backend/. .
+COPY backend/. backend/.
 
 # Link source code
 ARG DD_GIT_COMMIT_SHA
@@ -49,4 +49,4 @@ EXPOSE 3000
 
 # Run the application
 #ENTRYPOINT ["/app/datadog-init"]
-CMD ["node", "index.js"]
+CMD ["node", "backend/index.js"]
