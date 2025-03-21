@@ -1,4 +1,4 @@
-const BASE_URL = "https://dd-demo-sg.com";
+const BASE_URL = "https://dd-demo-sg.com/api";
 // const BASE_URL = "";
 
 const API = {
