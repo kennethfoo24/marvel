@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  namespace: marvel-python-backend
+  namespace: marvel
   name: postgres-pv
 spec:
   capacity:
