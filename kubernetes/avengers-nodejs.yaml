@@ -9,11 +9,9 @@ metadata:
     tags.datadoghq.com/service: avengers-nodejs
     tags.datadoghq.com/version: phase3
   name: avengers-nodejs
-  namespace: marvel-python-backend
+  namespace: marvel
 spec:
-  progressDeadlineSeconds: 600
   replicas: 3
-  revisionHistoryLimit: 10
   selector:
     matchLabels:
       run: avengers-nodejs
@@ -24,7 +22,6 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      creationTimestamp: null
       labels:
         admission.datadoghq.com/enabled: "true"
         app: avengers-nodejs
@@ -44,10 +41,7 @@ spec:
         - name: DB_NAME
           value: "userdb"
         - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-secret
-              key: DB_PASSWORD
+          value: "securepassword"
         - name: DB_PORT
           value: "5432"
         - name: DD_APM_ENABLED
@@ -73,7 +67,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: status.hostIP
-        image: kennethfoo24/marvel:3841c2e759c3fd3080488fa03075894fca9592ae
+        image: kennethfoo24/marvel:65b3ac5cabceff853505c1a2a5b48dc7101d3a25
         imagePullPolicy: Always
         name: avengers-nodejs
         ports:
@@ -81,8 +75,8 @@ spec:
           protocol: TCP
         resources:
           requests:
-            memory: "4Gi"
-            cpu: "2"
+            memory: "1Gi"
+            cpu: "200m"
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
