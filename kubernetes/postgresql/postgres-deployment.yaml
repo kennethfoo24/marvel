@@ -33,11 +33,8 @@ spec:
         image: postgres:13
         resources:
           requests:
-            memory: "4Gi"
-            cpu: "2"
-          limits:
-            memory: "8Gi"
-            cpu: "4"          
+            memory: "1Gi"
+            cpu: "200m"
         ports:
         - containerPort: 5432
         env:
