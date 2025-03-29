@@ -159,7 +159,7 @@ app.get("/avenger/:name", async (req, res) => {
         logger.info({ message: "Avenger selected", avenger: avenger.name });
 
         const errResponse = await axios.get(
-          "http://35.193.52.148/api/getErrorRequest"
+          "http://34.31.133.2/api/getErrorRequest"
         );
       } catch (error) {
         logger.error({
