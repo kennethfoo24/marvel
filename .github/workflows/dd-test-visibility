@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Check out your code
+      - name: Check out
+        uses: actions/checkout@v3
+
+      # 2) Set up Node (change '18' if you use a different version)
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # 3) Install dependencies in the backend folder
+      - name: Install dependencies
+        working-directory: backend
+        run: npm install
+
+      # 4) Configure Datadog Test Visibility
+      - name: Configure Datadog Test Optimization
+        uses: datadog/test-visibility-github-action@v2
+        with:
+          # This indicates NodeJS (JavaScript) instrumentation
+          languages: js
+          # Your Datadog API key must be stored as a GitHub secret
+          api_key: ${{ secrets.DD_API_KEY }}
+          # Adjust if you use another Datadog site (e.g., datadoghq.eu)
+          site: datadoghq.com
+
+      # 5) Run your tests in the backend folder, with special NODE_OPTIONS
+      - name: Run tests
+        working-directory: backend
+        run: npm run test
+        env:
+          NODE_OPTIONS: "-r ${{ env.DD_TRACE_PACKAGE }} --import ${{ env.DD_TRACE_ESM_IMPORT }}"
