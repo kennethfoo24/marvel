@@ -143,7 +143,7 @@ app.get("/avenger/:name", async (req, res) => {
     case "Thanos":
       try {
         const span = tracer.scope().active();
-        span.setTag("avenger", avenger.name);
+        if (span) {span.setTag("avenger", avenger.name);}
         const response = await axios.get(
           "http://34.170.235.76:80/delayed-response"
         );
@@ -179,23 +179,28 @@ app.get("/avenger/:name", async (req, res) => {
       }
       break;
 
-    default:
-      const spanDefault = tracer.scope().active();
-      spanDefault.setTag("avenger", avenger.name);
-      logger.error({ message: "AVENGERS ASSEMBLE !", avenger: avenger.name });
-      logger.warn({ message: "I am... Iron Man.", avenger: avenger.name });
-      logger.info({
-        message: "Captain America Hail Hydra",
-        avenger: avenger.name,
-      });
-      logger.info({ message: "Hulk Smashhh!", avenger: avenger.name });
-      logger.info({
-        message:
-          "Whosoever holds this hammer, if he be worthy, shall possess the power of Thor.",
-        avenger: avenger.name,
-      });
-      res.json(avenger);
-  }
+      default: {
+
+        const spanDefault = tracer.scope().active();
+        if (spanDefault) {
+        spanDefault.setTag("avenger", avenger.name);
+        }
+        logger.error({ message: "AVENGERS ASSEMBLE !", avenger: avenger.name });
+        logger.warn({ message: "I am... Iron Man.", avenger: avenger.name });
+        logger.info({
+          message: "Captain America Hail Hydra",
+          avenger: avenger.name,
+        });
+        logger.info({ message: "Hulk Smashhh!", avenger: avenger.name });
+        logger.info({
+          message:
+            "Whosoever holds this hammer, if he be worthy, shall possess the power of Thor.",
+          avenger: avenger.name,
+        });
+        res.json(avenger);
+        break;
+    }
+    }
 });
 
 // Endpoint to get all users
@@ -358,6 +363,12 @@ app.post("/security-submit", (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  logger.info({ message: `Server running at http://localhost:${port}/` });
-});
+// Start the server ONLY if this file is the main module
+if (require.main === module) {
+  app.listen(port, () => {
+    logger.info({ message: `Server running at http://localhost:${port}/` });
+  });
+}
+
+// Export your app for testing
+module.exports = app;
