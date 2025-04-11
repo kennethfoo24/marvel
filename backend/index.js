@@ -145,7 +145,7 @@ app.get("/avenger/:name", async (req, res) => {
         const span = tracer.scope().active();
         if (span) {span.setTag("avenger", avenger.name);}
         const response = await axios.get(
-          "http://avengers-delayed-service:80/delayed-response"
+          "http://avengers-delayed-python-service:80/delayed-response"
         );
         logger.error({
           message: "OMG! It's Thanos, everybody run !",
@@ -159,7 +159,7 @@ app.get("/avenger/:name", async (req, res) => {
         logger.info({ message: "Avenger selected", avenger: avenger.name });
 
         const errResponse = await axios.get(
-          "http://34.29.163.251/api/getErrorRequest"
+          "http://avengers-security-python-service:80/api/getErrorRequest"
         );
       } catch (error) {
         logger.error({
@@ -298,7 +298,7 @@ app.get("/attackGKE", async (req, res) => {
   const username =
     req.body.username || req.query.username || req.headers["x-username"];
   try {
-    const response = await axios.get("http://34.29.163.251:80/api/getRequest", {
+    const response = await axios.get("http://avengers-security-python-service:80/api/getRequest", {
       headers: {
         "User-Agent": "dd-test-scanner-log",
         "X-Username": username,
