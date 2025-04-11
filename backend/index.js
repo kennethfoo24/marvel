@@ -145,7 +145,7 @@ app.get("/avenger/:name", async (req, res) => {
         const span = tracer.scope().active();
         if (span) {span.setTag("avenger", avenger.name);}
         const response = await axios.get(
-          "http://34.170.235.76:80/delayed-response"
+          "http://avengers-delayed-service:80/delayed-response"
         );
         logger.error({
           message: "OMG! It's Thanos, everybody run !",
