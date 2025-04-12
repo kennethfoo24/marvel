@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: avengers-security-python
+    country: sg
+    run: avengers-security-python
+    tags.datadoghq.com/env: avengers-app
+    tags.datadoghq.com/service: avengers-security-python
+    tags.datadoghq.com/version: 1.0.2
+  name: avengers-security-python
+  namespace: marvel
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      run: avengers-security-python
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        admission.datadoghq.com/enabled: "true"
+        app: avengers-security-python
+        country: sg
+        run: avengers-security-python
+        tags.datadoghq.com/env: avengers-app
+        tags.datadoghq.com/service: avengers-security-python
+        tags.datadoghq.com/version: 1.0.2
+    spec:
+      containers:
+      - env:
+        - name: DD_APM_ENABLED
+          value: "true"
+        - name: DD_APPSEC_ENABLED
+          value: "true"
+        - name: DD_PROFILING_ENABLED
+          value: "true"
+        - name: DD_RUNTIME_METRICS_ENABLED
+          value: "true"
+        - name: DB_PASSWORD
+          value: "db-password"
+        - name: DD_TRACE_DEBUG
+          value: "true"
+        - name: DD_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.hostIP
+        image: kennethfoo24/attack-python:b201d609f9367b4231e96ae53c749b6f413ac9f3
+        imagePullPolicy: Always
+        name: avengers-security-python
+        ports:
+        - containerPort: 5500
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          name: kube-api-access-dwntg
+          readOnly: true
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: true
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: default
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: kube-api-access-dwntg
+        projected:
+          defaultMode: 420
+          sources:
+          - serviceAccountToken:
+              expirationSeconds: 3607
+              path: token
+          - configMap:
+              items:
+              - key: ca.crt
+                path: ca.crt
+              name: kube-root-ca.crt
+          - downwardAPI:
+              items:
+              - fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+                path: namespace

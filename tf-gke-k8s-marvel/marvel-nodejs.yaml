@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: avengers-nodejs
+    country: sg
+    run: avengers-nodejs
+    tags.datadoghq.com/env: avengers-app
+    tags.datadoghq.com/service: avengers-nodejs
+    tags.datadoghq.com/version: phase3
+  name: avengers-nodejs
+  namespace: marvel
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      run: avengers-nodejs
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        admission.datadoghq.com/enabled: "true"
+        app: avengers-nodejs
+        country: sg
+        run: avengers-nodejs
+        tags.datadoghq.com/env: avengers-app
+        tags.datadoghq.com/service: avengers-nodejs
+        tags.datadoghq.com/version: phase3
+        admission.datadoghq.com/enabled: "true"
+    spec:
+      containers:
+      - env:
+        - name: DB_USER
+          value: "admin"
+        - name: DB_HOST
+          value: "34.45.234.247"
+        - name: DB_NAME
+          value: "userdb"
+        - name: DB_PASSWORD
+          value: "securepassword"
+        - name: DB_PORT
+          value: "5432"
+        - name: DD_APM_ENABLED
+          value: "true"
+        - name: DD_APPSEC_ENABLED
+          value: "true"
+        - name: DD_PROFILING_ENABLED
+          value: "true"
+        - name: DD_RUNTIME_METRICS_ENABLED
+          value: "true"
+        - name: DD_TRACE_DEBUG
+          value: "true"
+        - name: DD_LOGS_INJECTION
+          value: "true"
+        - name: DD_TRACE_SAMPLE_RATE
+          value: "1"
+        - name: DD_IAST_ENABLED
+          value: "true"
+        - name: DD_DBM_PROPAGATION_MODE
+          value: "full"
+        - name: DD_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.hostIP
+        image: kennethfoo24/marvel:46dbabffeb34fdd802788e07adebffa938a5cf53
+        imagePullPolicy: Always
+        name: avengers-nodejs
+        ports:
+        - containerPort: 5500
+          protocol: TCP
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          name: kube-api-access-dwntg
+          readOnly: true
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: true
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: default
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: kube-api-access-dwntg
+        projected:
+          defaultMode: 420
+          sources:
+          - serviceAccountToken:
+              expirationSeconds: 3607
+              path: token
+          - configMap:
+              items:
+              - key: ca.crt
+                path: ca.crt
+              name: kube-root-ca.crt
+          - downwardAPI:
+              items:
+              - fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+                path: namespace
