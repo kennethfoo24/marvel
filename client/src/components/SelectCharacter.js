@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Typography, Modal } from "antd";
+import { Button, Modal } from "antd-mobile";
 import { useLocation } from "react-router-dom";
 import api from "../Api";
 import "./Styles.css";
@@ -57,12 +57,8 @@ const SelectCharacter = () => {
   return (
     <div>
       <div>
-        <Typography.Title style={{ color: "white" }}>
-          Assemble, {username}!
-        </Typography.Title>
-        <Typography.Title level={4} style={{ color: "white" }}>
-          Please select your Avenger character
-        </Typography.Title>
+        <h1 style={{ color: "white" }}>Assemble, {username}!</h1>
+        <h4 style={{ color: "white" }}>Please select your Avenger character</h4>
       </div>
       {characters.map((c, i) => (
         <Button
@@ -95,7 +91,7 @@ const SelectCharacter = () => {
               }}
             />
           </div>
-          <Typography.Title>{avenger.phrase}</Typography.Title>
+          <h1>{avenger.phrase}</h1>
         </div>
       </Modal>
     </div>

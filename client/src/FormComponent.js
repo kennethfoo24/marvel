@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button } from "antd-mobile";
 import { datadogRum } from "@datadog/browser-rum";
 import { useNavigate } from "react-router-dom";
 import api from "./Api";

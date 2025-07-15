@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Typography, Form, Input, Button, Modal } from "antd";
+import { Form, Input, Button, Modal } from "antd-mobile";
 import api from "../Api";
 import { useLocation } from "react-router-dom";
 
@@ -35,9 +35,7 @@ const SQLInjection = () => {
   };
   return (
     <div>
-      <Typography.Title style={{ color: "white" }}>
-        SQL Injection Demo
-      </Typography.Title>
+      <h1 style={{ color: "white" }}>SQL Injection Demo</h1>
       <Form form={form} onFinish={handleSubmit}>
         <Form.Item name="input">
           <Input size="large" />
@@ -60,7 +58,7 @@ const SQLInjection = () => {
         onCancel={() => setOpen(false)}
       >
         <div>
-          <Typography.Title>HTTP Response</Typography.Title>
+          <h1>HTTP Response</h1>
           <div>{data}</div>
         </div>
       </Modal>

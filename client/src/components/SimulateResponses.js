@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Modal, Typography } from "antd";
+import { Button, Modal } from "antd-mobile";
 import api from "../Api";
 import { useLocation } from "react-router-dom";
 
@@ -67,7 +67,7 @@ const SimulateResponses = () => {
         onCancel={() => setOpen(false)}
       >
         <div>
-          <Typography.Title>HTTP Response</Typography.Title>
+          <h1>HTTP Response</h1>
           <div>{JSON.stringify(data, null, 2)}</div>
         </div>
       </Modal>
