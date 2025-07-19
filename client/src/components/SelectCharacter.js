@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Modal } from "antd-mobile";
+import { Button, Modal, DotLoading } from "antd-mobile";
 import { useLocation } from "react-router-dom";
 import api from "../Api";
 import "./Styles.css";
@@ -58,7 +58,9 @@ const SelectCharacter = () => {
     <div>
       <div>
         <h1 style={{ color: "white" }}>Assemble, {username}!</h1>
-        <h4 style={{ color: "white" }}>Please select your Avenger character</h4>
+        <h4 style={{ color: "white" }}>
+          Select your favourite Avenger character
+        </h4>
       </div>
       {characters.map((c, i) => (
         <Button
@@ -73,27 +75,34 @@ const SelectCharacter = () => {
         </Button>
       ))}
       <Modal
-        loading={loading}
-        open={open}
-        footer=""
-        onCancel={() => setOpen(false)}
-      >
-        <div className="modal">
-          <div>
-            <ImageComponent
-              src={`${process.env.PUBLIC_URL}/${avenger.image}`}
-              alt="Avenger image"
-              width="150"
-              height="150"
-              style={{
-                borderRadius: "5%",
-                border: "2px solid black",
-              }}
-            />
-          </div>
-          <h1>{avenger.phrase}</h1>
-        </div>
-      </Modal>
+        visible={open}
+        closeOnMaskClick
+        destroyOnClose
+        content={
+          loading ? (
+            <span style={{ fontSize: 24 }}>
+              <DotLoading />
+            </span>
+          ) : (
+            <>
+              <ImageComponent
+                src={`${process.env.PUBLIC_URL}/${avenger.image}`}
+                alt="Avenger image"
+                width="150"
+                height="150"
+                style={{
+                  borderRadius: "5%",
+                  border: "2px solid black",
+                }}
+              />
+              <h1>{avenger.phrase}</h1>
+            </>
+          )
+        }
+        onClose={() => {
+          setOpen(false);
+        }}
+      />
     </div>
   );
 };

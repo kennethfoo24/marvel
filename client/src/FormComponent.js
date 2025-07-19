@@ -23,20 +23,38 @@ const FormComponent = ({ setUsername }) => {
   return (
     <div className="container">
       <div className="logo">PUPVENGERS</div>
-      <div className="msg">
-        <div>Welcome to Puppy Avengers</div>
-        <div>Enter your username:</div>
-        <Form onFinish={handleSubmit}>
-          <Form.Item name="username">
-            <Input />
-          </Form.Item>
-          <Form.Item>
-            <Button size="large" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
-        </Form>
-      </div>
+      <Form
+        onFinish={handleSubmit}
+        layout="vertical"
+        className="form-area"
+        footer={
+          <Button
+            block
+            type="submit"
+            style={{
+              backgroundColor: "white",
+              color: "#632CA6",
+              borderRadius: "8px",
+              fontWeight: "bold",
+            }}
+          >
+            Submit
+          </Button>
+        }
+      >
+        <Form.Item
+          name="username"
+          rules={[{ required: true, message: "Username is required" }]}
+        >
+          <Input
+            placeholder="Enter your name"
+            style={{
+              borderRadius: 8,
+              backgroundColor: "white",
+            }}
+          />
+        </Form.Item>
+      </Form>
     </div>
   );
 };

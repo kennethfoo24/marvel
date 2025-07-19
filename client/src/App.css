@@ -4,33 +4,38 @@ body {
   margin: 0;
   padding: 0;
   align-items: center;
-  background: radial-gradient(#632ca6, black);
+  background: black;
   overflow: hidden;
-  color: white;
 }
 
 .container {
-  text-align: center;
+  background: radial-gradient(#632ca6, black);
+  height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  height: 80vh;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
 }
 
 .logo {
+  border: 2px solid white;
+  padding: 10px 20px;
   font-size: 5em;
   letter-spacing: -0.06em;
-  animation: hide 8s linear forwards;
-  padding: 0 0.2em;
-  line-height: 1;
-  border: 0.02em solid white;
-  font-family: "Passion One", impact;
-  color: white;
-  transform: scaleY(1.4);
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-family: "Impact", sans-serif;
 }
 
-.msg {
-  padding-top: 3em;
-  color: white;
+.form-area {
+  width: 80%;
+  max-width: 300px;
+}
+
+.form-text {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: #632ca6;
 }

@@ -36,19 +36,40 @@ const SQLInjection = () => {
   return (
     <div>
       <h1 style={{ color: "white" }}>SQL Injection Demo</h1>
-      <Form form={form} onFinish={handleSubmit}>
+      <Button
+        style={{
+          backgroundColor: "#c887ff",
+          color: "black",
+          borderRadius: "8px",
+          margin: "0.5em",
+          border: "0",
+        }}
+        onClick={handleAutofill}
+      >
+        Sample SQL query
+      </Button>
+      <Form
+        form={form}
+        onFinish={handleSubmit}
+        footer={
+          <div>
+            <Button
+              block
+              type="submit"
+              style={{
+                backgroundColor: "white",
+                color: "#632CA6",
+                borderRadius: "8px",
+                fontWeight: "bold",
+              }}
+            >
+              Submit
+            </Button>
+          </div>
+        }
+      >
         <Form.Item name="input">
           <Input size="large" />
-        </Form.Item>
-        <Form.Item>
-          <Button className="button" size="large" onClick={handleAutofill}>
-            Autofill SQL Injection
-          </Button>
-        </Form.Item>
-        <Form.Item>
-          <Button className="button" size="large" htmlType="submit">
-            Submit
-          </Button>
         </Form.Item>
       </Form>
       <Modal

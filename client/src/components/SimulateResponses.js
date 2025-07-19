@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Modal } from "antd-mobile";
+import { Button, Modal, DotLoading } from "antd-mobile";
 import api from "../Api";
 import { useLocation } from "react-router-dom";
 
@@ -36,11 +36,11 @@ const SimulateResponses = () => {
       setLoading(true);
       setOpen(true);
       const resp = await api.simulateAttack(actions[index].action, username);
-      console.log(resp);
       setData(resp);
       setLoading(false);
     } catch (error) {
       console.error("Error:", error);
+      setData(error);
     }
   };
   return (
@@ -61,16 +61,23 @@ const SimulateResponses = () => {
         </Button>
       ))}
       <Modal
-        loading={loading}
-        open={open}
-        footer=""
-        onCancel={() => setOpen(false)}
-      >
-        <div>
-          <h1>HTTP Response</h1>
-          <div>{JSON.stringify(data, null, 2)}</div>
-        </div>
-      </Modal>
+        visible={open}
+        closeOnMaskClick
+        destroyOnClose
+        content={
+          loading ? (
+            <span style={{ fontSize: 24 }}>
+              <DotLoading />
+            </span>
+          ) : (
+            <div>
+              <h1>HTTP Response</h1>
+              <div>{JSON.stringify(data, null, 2)}</div>
+            </div>
+          )
+        }
+        onClose={() => setOpen(false)}
+      />
     </div>
   );
 };
