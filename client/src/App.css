@@ -3,13 +3,11 @@
 body {
   margin: 0;
   padding: 0;
-  align-items: center;
   background: black;
   overflow: hidden;
 }
 
 .container {
-  background: radial-gradient(#632ca6, black);
   height: 100vh;
   display: flex;
   flex-direction: column;

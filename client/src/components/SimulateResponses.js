@@ -44,7 +44,7 @@ const SimulateResponses = () => {
     }
   };
   return (
-    <div>
+    <div className="container">
       {actions.map((c, i) => (
         <Button
           className="button"
@@ -62,6 +62,7 @@ const SimulateResponses = () => {
       ))}
       <Modal
         visible={open}
+        showCloseButton
         closeOnMaskClick
         destroyOnClose
         content={

@@ -34,7 +34,7 @@ const SQLInjection = () => {
     });
   };
   return (
-    <div>
+    <div className="container">
       <h1 style={{ color: "white" }}>SQL Injection Demo</h1>
       <Button
         style={{
@@ -76,6 +76,7 @@ const SQLInjection = () => {
         loading={loading}
         open={open}
         footer=""
+        showCloseButton
         onCancel={() => setOpen(false)}
       >
         <div>

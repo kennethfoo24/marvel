@@ -36,7 +36,7 @@ const ImageComponent = ({ src, alt, width, height, style }) => {
 const SelectCharacter = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [avenger, setAvenger] = useState({});
+  const [avenger, setAvenger] = useState({ image: "", phrase: "" });
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const username = queryParams.get("username");
@@ -47,35 +47,39 @@ const SelectCharacter = () => {
       setLoading(true);
       setOpen(true);
       const avenger = await api.selectCharacter(character, username);
-      setAvenger(avenger);
-      setLoading(false);
+      if (!!avenger.image) {
+        setAvenger(avenger);
+        setLoading(false);
+      }
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
   return (
-    <div>
+    <div className="container">
+      <h1 style={{ color: "white" }}>Assemble, {username}!</h1>
+      <h4 style={{ color: "white" }}>
+        Select your favourite Avenger character
+      </h4>
+
       <div>
-        <h1 style={{ color: "white" }}>Assemble, {username}!</h1>
-        <h4 style={{ color: "white" }}>
-          Select your favourite Avenger character
-        </h4>
+        {characters.map((c, i) => (
+          <Button
+            className="button"
+            key={i}
+            data-id={i}
+            data-name={c.key}
+            onClick={handleClick}
+            size="large"
+          >
+            {c.label}
+          </Button>
+        ))}
       </div>
-      {characters.map((c, i) => (
-        <Button
-          className="button"
-          key={i}
-          data-id={i}
-          data-name={c.key}
-          onClick={handleClick}
-          size="large"
-        >
-          {c.label}
-        </Button>
-      ))}
       <Modal
         visible={open}
+        showCloseButton
         closeOnMaskClick
         destroyOnClose
         content={
