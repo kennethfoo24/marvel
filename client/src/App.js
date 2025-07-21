@@ -8,15 +8,10 @@ function App() {
   const [username, setUsername] = useState("");
   return (
     <Router>
-      <div>
-        <Routes>
-          <Route
-            path="/"
-            element={<FormComponent setUsername={setUsername} />}
-          />
-          <Route path="/actions" element={<ActionPage username={username} />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<FormComponent setUsername={setUsername} />} />
+        <Route path="/actions" element={<ActionPage username={username} />} />
+      </Routes>
     </Router>
   );
 }

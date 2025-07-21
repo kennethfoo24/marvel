@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "antd";
+import { Button } from "antd-mobile";
 
 const CustomButton = (props) => {
   const { label } = props;

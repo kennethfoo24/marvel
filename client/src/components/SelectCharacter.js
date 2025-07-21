@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Typography, Modal } from "antd";
+import { Button, Modal, DotLoading } from "antd-mobile";
 import { useLocation } from "react-router-dom";
 import api from "../Api";
 import "./Styles.css";
@@ -36,7 +36,7 @@ const ImageComponent = ({ src, alt, width, height, style }) => {
 const SelectCharacter = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [avenger, setAvenger] = useState({});
+  const [avenger, setAvenger] = useState({ image: "", phrase: "" });
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const username = queryParams.get("username");
@@ -47,57 +47,66 @@ const SelectCharacter = () => {
       setLoading(true);
       setOpen(true);
       const avenger = await api.selectCharacter(character, username);
-      setAvenger(avenger);
-      setLoading(false);
+      if (!!avenger.image) {
+        setAvenger(avenger);
+        setLoading(false);
+      }
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
   return (
-    <div>
+    <div className="container">
+      <h1 style={{ color: "white" }}>Assemble, {username}!</h1>
+      <h4 style={{ color: "white" }}>
+        Select your favourite Avenger character
+      </h4>
+
       <div>
-        <Typography.Title style={{ color: "white" }}>
-          Assemble, {username}!
-        </Typography.Title>
-        <Typography.Title level={4} style={{ color: "white" }}>
-          Please select your Avenger character
-        </Typography.Title>
+        {characters.map((c, i) => (
+          <Button
+            className="button"
+            key={i}
+            data-id={i}
+            data-name={c.key}
+            onClick={handleClick}
+            size="large"
+          >
+            {c.label}
+          </Button>
+        ))}
       </div>
-      {characters.map((c, i) => (
-        <Button
-          className="button"
-          key={i}
-          data-id={i}
-          data-name={c.key}
-          onClick={handleClick}
-          size="large"
-        >
-          {c.label}
-        </Button>
-      ))}
       <Modal
-        loading={loading}
-        open={open}
-        footer=""
-        onCancel={() => setOpen(false)}
-      >
-        <div className="modal">
-          <div>
-            <ImageComponent
-              src={`${process.env.PUBLIC_URL}/${avenger.image}`}
-              alt="Avenger image"
-              width="150"
-              height="150"
-              style={{
-                borderRadius: "5%",
-                border: "2px solid black",
-              }}
-            />
-          </div>
-          <Typography.Title>{avenger.phrase}</Typography.Title>
-        </div>
-      </Modal>
+        visible={open}
+        showCloseButton
+        closeOnMaskClick
+        destroyOnClose
+        content={
+          loading ? (
+            <span style={{ fontSize: 24 }}>
+              <DotLoading />
+            </span>
+          ) : (
+            <>
+              <ImageComponent
+                src={`${process.env.PUBLIC_URL}/${avenger.image}`}
+                alt="Avenger image"
+                width="150"
+                height="150"
+                style={{
+                  borderRadius: "5%",
+                  border: "2px solid black",
+                }}
+              />
+              <h1>{avenger.phrase}</h1>
+            </>
+          )
+        }
+        onClose={() => {
+          setOpen(false);
+        }}
+      />
     </div>
   );
 };

@@ -3,7 +3,6 @@ import { Tabs, Swiper } from "antd-mobile";
 import SelectCharacter from "./components/SelectCharacter";
 import SimulateResponses from "./components/SimulateResponses";
 import SQLInjection from "./components/SQLInjection";
-import "./index.css";
 
 const tabItems = [
   {
@@ -25,7 +24,13 @@ const ActionPage = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <div>
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Tabs
         activeKey={tabItems[activeIndex].key}
         onChange={(key) => {
@@ -46,32 +51,32 @@ const ActionPage = () => {
           />
         ))}
       </Tabs>
-      <Swiper
-        direction="horizontal"
-        loop
-        indicator={() => null}
-        ref={swiperRef}
-        defaultIndex={activeIndex}
-        onIndexChange={(index) => {
-          setActiveIndex(index);
+      <div
+        style={{
+          background: "radial-gradient(#632ca6, black)",
         }}
       >
-        <Swiper.Item>
-          <div className="container">
+        <Swiper
+          direction="horizontal"
+          loop
+          indicator={() => null}
+          ref={swiperRef}
+          defaultIndex={activeIndex}
+          onIndexChange={(index) => {
+            setActiveIndex(index);
+          }}
+        >
+          <Swiper.Item>
             <SelectCharacter />
-          </div>
-        </Swiper.Item>
-        <Swiper.Item>
-          <div className="container">
+          </Swiper.Item>
+          <Swiper.Item>
             <SimulateResponses />
-          </div>
-        </Swiper.Item>
-        <Swiper.Item>
-          <div className="container">
+          </Swiper.Item>
+          <Swiper.Item>
             <SQLInjection />
-          </div>
-        </Swiper.Item>
-      </Swiper>
+          </Swiper.Item>
+        </Swiper>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Typography, Form, Input, Button, Modal } from "antd";
+import { Form, Input, Button, Modal } from "antd-mobile";
 import api from "../Api";
 import { useLocation } from "react-router-dom";
 
@@ -34,33 +34,53 @@ const SQLInjection = () => {
     });
   };
   return (
-    <div>
-      <Typography.Title style={{ color: "white" }}>
-        SQL Injection Demo
-      </Typography.Title>
-      <Form form={form} onFinish={handleSubmit}>
+    <div className="container">
+      <h1 style={{ color: "white" }}>SQL Injection Demo</h1>
+      <Button
+        style={{
+          backgroundColor: "#c887ff",
+          color: "black",
+          borderRadius: "8px",
+          margin: "0.5em",
+          border: "0",
+        }}
+        onClick={handleAutofill}
+      >
+        Sample SQL query
+      </Button>
+      <Form
+        form={form}
+        onFinish={handleSubmit}
+        footer={
+          <div>
+            <Button
+              block
+              type="submit"
+              style={{
+                backgroundColor: "white",
+                color: "#632CA6",
+                borderRadius: "8px",
+                fontWeight: "bold",
+              }}
+            >
+              Submit
+            </Button>
+          </div>
+        }
+      >
         <Form.Item name="input">
           <Input size="large" />
-        </Form.Item>
-        <Form.Item>
-          <Button className="button" size="large" onClick={handleAutofill}>
-            Autofill SQL Injection
-          </Button>
-        </Form.Item>
-        <Form.Item>
-          <Button className="button" size="large" htmlType="submit">
-            Submit
-          </Button>
         </Form.Item>
       </Form>
       <Modal
         loading={loading}
         open={open}
         footer=""
+        showCloseButton
         onCancel={() => setOpen(false)}
       >
         <div>
-          <Typography.Title>HTTP Response</Typography.Title>
+          <h1>HTTP Response</h1>
           <div>{data}</div>
         </div>
       </Modal>
