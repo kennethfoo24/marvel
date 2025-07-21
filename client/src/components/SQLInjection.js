@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Input, Button, Modal } from "antd-mobile";
+import { Form, Input, Button, Modal, DotLoading } from "antd-mobile";
 import api from "../Api";
 import { useLocation } from "react-router-dom";
 
@@ -73,17 +73,24 @@ const SQLInjection = () => {
         </Form.Item>
       </Form>
       <Modal
-        loading={loading}
-        open={open}
-        footer=""
+        visible={open}
         showCloseButton
-        onCancel={() => setOpen(false)}
-      >
-        <div>
-          <h1>HTTP Response</h1>
-          <div>{data}</div>
-        </div>
-      </Modal>
+        closeOnMaskClick
+        destroyOnClose
+        content={
+          loading ? (
+            <span style={{ fontSize: 24 }}>
+              <DotLoading />
+            </span>
+          ) : (
+            <div>
+              <h1>HTTP Response</h1>
+              <div>{data}</div>
+            </div>
+          )
+        }
+        onClose={() => setOpen(false)}
+      />
     </div>
   );
 };
