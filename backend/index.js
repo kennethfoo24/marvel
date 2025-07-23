@@ -144,7 +144,7 @@ app.get("/avenger/:name", async (req, res) => {
           span.setTag("avenger", avenger.name);
         }
         const response = await axios.get(
-          "http://34.118.237.148:80/delayed-response"
+          "http://avengers-delayed-python-service:80/delayed-response"
         );
         logger.error({
           message: "OMG! It's Thanos, everybody run !",
