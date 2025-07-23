@@ -1,3 +1,6 @@
+const tracer = require("dd-trace").init({
+  appsec: true,
+});
 const express = require("express");
 const path = require("path");
 const logger = require("./logger");
@@ -5,13 +8,24 @@ const errorTagger = require("./error-tagger"); // Adjust the path accordingly
 const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
-const tracer = require("dd-trace").init({
-  appsec: true,
-});
 const axios = require("axios").default;
 const { Pool } = require("pg");
 const cors = require("cors");
 require("dotenv").config(); // Using dotenv for environment variables
+
+const originalConsoleLog = console.log;
+
+console.log = function (...args) {
+  const span = tracer.scope().active();
+  if (span) {
+    const traceId = span.context().toTraceId();
+    const spanId = span.context().toSpanId();
+    // Prepend the trace information to the log message
+    originalConsoleLog(`[trace_id=${traceId}] [span_id=${spanId}]`, ...args);
+  } else {
+    originalConsoleLog(...args);
+  }
+};
 
 // Database connection configuration using environment variables
 const pool = new Pool({
@@ -126,7 +140,9 @@ app.get("/avenger/:name", async (req, res) => {
     case "Thanos":
       try {
         const span = tracer.scope().active();
-        span.setTag("avenger", avenger.name);
+        if (span) {
+          span.setTag("avenger", avenger.name);
+        }
         const response = await axios.get(
           "http://34.118.237.148:80/delayed-response"
         );
@@ -142,7 +158,7 @@ app.get("/avenger/:name", async (req, res) => {
         logger.info({ message: "Avenger selected", avenger: avenger.name });
 
         const errResponse = await axios.get(
-          "http://35.193.52.148/api/getErrorRequest"
+          "http://avengers-security-python-service:80/api/getErrorRequest"
         );
       } catch (error) {
         logger.error({
@@ -162,9 +178,11 @@ app.get("/avenger/:name", async (req, res) => {
       }
       break;
 
-    default:
+    default: {
       const spanDefault = tracer.scope().active();
-      spanDefault.setTag("avenger", avenger.name);
+      if (spanDefault) {
+        spanDefault.setTag("avenger", avenger.name);
+      }
       logger.error({ message: "AVENGERS ASSEMBLE !", avenger: avenger.name });
       logger.warn({ message: "I am... Iron Man.", avenger: avenger.name });
       logger.info({
@@ -178,6 +196,8 @@ app.get("/avenger/:name", async (req, res) => {
         avenger: avenger.name,
       });
       res.json(avenger);
+      break;
+    }
   }
 });
 
@@ -276,12 +296,15 @@ app.get("/attackGKE", async (req, res) => {
   const username =
     req.body.username || req.query.username || req.headers["x-username"];
   try {
-    const response = await axios.get("http://35.193.52.148:80/api/getRequest", {
-      headers: {
-        "User-Agent": "dd-test-scanner-log",
-        "X-Username": username,
-      },
-    });
+    const response = await axios.get(
+      "http://avengers-security-python-service:80/api/getRequest",
+      {
+        headers: {
+          "User-Agent": "dd-test-scanner-log",
+          "X-Username": username,
+        },
+      }
+    );
     logger.info({ message: `This is the response ${response}` });
     res.status(200).send(response.data);
   } catch (error) {
@@ -341,6 +364,12 @@ app.post("/security-submit", (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  logger.info({ message: `Server running at http://localhost:${port}/` });
-});
+// Start the server ONLY if this file is the main module
+if (require.main === module) {
+  app.listen(port, () => {
+    logger.info({ message: `Server running at http://localhost:${port}/` });
+  });
+}
+
+// Export your app for testing
+module.exports = app;

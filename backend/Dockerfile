@@ -15,16 +15,20 @@ COPY backend/package*.json ./
 RUN npm install
 
 # Copy the rest of the application code
-COPY backend/. .
+COPY backend/. backend/.
 
 # Link source code
 ARG DD_GIT_COMMIT_SHA
+ARG DD_GIT_REPOSITORY_URL
+ENV DD_GIT_REPOSITORY_URL=${DD_GIT_REPOSITORY_URL}
+ENV DD_GIT_COMMIT_SHA=${DD_GIT_COMMIT_SHA}
 ENV DD_TAGS="git.repository_url:github.com/kennethfoo24/marvel,git.commit.sha:${DD_GIT_COMMIT_SHA}"
+
 
 # datadog unified service tagging
 ENV DD_SERVICE="avengers-nodejs"
 ENV DD_ENV="avengers-app"
-ENV DD_VERSION="phase:2"
+ENV DD_VERSION="phase:2-${DD_GIT_COMMIT_SHA}"
 ENV DD_TRACE_ENABLED=true
 ENV DD_SITE='datadoghq.com'
 ENV DD_TRACE_PROPAGATION_STYLE='datadog'
@@ -45,4 +49,4 @@ EXPOSE 3000
 
 # Run the application
 #ENTRYPOINT ["/app/datadog-init"]
-CMD ["node", "index.js"]
+CMD ["node", "backend/index.js"]

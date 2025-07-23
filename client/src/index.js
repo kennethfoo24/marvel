@@ -16,7 +16,7 @@ datadogRum.init({
   //  env: 'production',
   //  version: '1.0.0',
   version: "phase1",
-  allowedTracingUrls: ["https://dd-demo-sg.one", "http://dd-demo-sg.one"],
+  allowedTracingUrls: ["https://dd-demo-sg.com", "http://dd-demo-sg.com", "https://dd-demo-sg.one", "http://dd-demo-sg.one", "https://kenneth-marvel-958371799887.us-central1.run.app", "http://kenneth-marvel-958371799887.us-central1.run.app"],
   sessionSampleRate: 100,
   sessionReplaySampleRate: 100,
   trackUserInteractions: true,

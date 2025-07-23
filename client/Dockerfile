@@ -21,7 +21,7 @@ RUN rm /usr/share/nginx/html/50x.html
 COPY --from=build /app/build /usr/share/nginx/html
 
 # Copy the custom NGINX configuration
-COPY public/nginx.conf /etc/nginx/conf.d/default.conf
+COPY client/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 8080
 EXPOSE 8080

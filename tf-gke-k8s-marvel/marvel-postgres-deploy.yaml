@@ -20,7 +20,7 @@ spec:
                 {
                   "host": "%%host%%",
                   "port": "5432",
-                  "username": "datadog",
+                  "username": "admin",
                   "password": "securepassword",
                   "dbm": "true"
                 }

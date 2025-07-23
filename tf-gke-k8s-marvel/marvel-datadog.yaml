@@ -1,0 +1,50 @@
+apiVersion: "datadoghq.com/v2alpha1"
+kind: "DatadogAgent"
+metadata:
+  name: "datadog"
+spec:
+  global:
+    clusterName: "kenneth-marvel-cluster"
+    tags:
+      - "env:avengers-app"
+    credentials:
+      apiSecret:
+        secretName: "datadog-secret"
+        keyName: "api-key"
+  features:
+    apm:
+      instrumentation:
+        enabled: true
+        libVersions:
+          js: "5"
+          python: "3"
+    logCollection:
+      enabled: true
+      containerCollectAll: true
+    liveProcessCollection:
+      enabled: true
+    liveContainerCollection:
+      enabled: true
+    processDiscovery:
+      enabled: true
+    asm:
+      threats:
+        enabled: true
+      sca:
+        enabled: true
+      iast:
+        enabled: true
+    cws:
+      enabled: true
+    cspm:
+      enabled: true
+    sbom:
+      containerImage:
+        enabled: true
+      host:
+        enabled: true
+    usm:
+      enabled: true
+    npm:
+      enabled: true
+
