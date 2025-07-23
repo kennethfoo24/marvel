@@ -3,6 +3,8 @@ import { Tabs, Swiper } from "antd-mobile";
 import SelectCharacter from "./components/SelectCharacter";
 import SimulateResponses from "./components/SimulateResponses";
 import SQLInjection from "./components/SQLInjection";
+import { useLocation } from "react-router-dom";
+import { datadogRum } from "@datadog/browser-rum";
 
 const tabItems = [
   {
@@ -22,6 +24,15 @@ const tabItems = [
 const ActionPage = () => {
   const swiperRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const username = queryParams.get("username");
+  if (username !== undefined && username.length > 0) {
+    datadogRum.setUser({
+      id: username,
+      name: username,
+    });
+  }
 
   return (
     <div
