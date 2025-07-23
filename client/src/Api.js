@@ -79,6 +79,7 @@ const API = {
     } catch (error) {
       // Log or report error
       console.error("submitUsername error:", error.message);
+      return error.message;
     }
   },
 };

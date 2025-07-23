@@ -16,15 +16,15 @@ require("dotenv").config(); // Using dotenv for environment variables
 const originalConsoleLog = console.log;
 
 console.log = function (...args) {
-    const span = tracer.scope().active();
-    if (span) {
-        const traceId = span.context().toTraceId();
-        const spanId = span.context().toSpanId();
-        // Prepend the trace information to the log message
-        originalConsoleLog(`[trace_id=${traceId}] [span_id=${spanId}]`, ...args);
-    } else {
-        originalConsoleLog(...args);
-    }
+  const span = tracer.scope().active();
+  if (span) {
+    const traceId = span.context().toTraceId();
+    const spanId = span.context().toSpanId();
+    // Prepend the trace information to the log message
+    originalConsoleLog(`[trace_id=${traceId}] [span_id=${spanId}]`, ...args);
+  } else {
+    originalConsoleLog(...args);
+  }
 };
 
 // Database connection configuration using environment variables
@@ -39,11 +39,8 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
 });
 
-
 // Apply CORS middleware globally for all routes
 app.use(cors());
-
-
 
 // Apply body parser middleware for parsing URL-encoded bodies and JSON
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -143,9 +140,11 @@ app.get("/avenger/:name", async (req, res) => {
     case "Thanos":
       try {
         const span = tracer.scope().active();
-        if (span) {span.setTag("avenger", avenger.name);}
+        if (span) {
+          span.setTag("avenger", avenger.name);
+        }
         const response = await axios.get(
-          "http://avengers-delayed-python-service:80/delayed-response"
+          "http://34.118.237.148:80/delayed-response"
         );
         logger.error({
           message: "OMG! It's Thanos, everybody run !",
@@ -179,28 +178,27 @@ app.get("/avenger/:name", async (req, res) => {
       }
       break;
 
-      default: {
-
-        const spanDefault = tracer.scope().active();
-        if (spanDefault) {
+    default: {
+      const spanDefault = tracer.scope().active();
+      if (spanDefault) {
         spanDefault.setTag("avenger", avenger.name);
-        }
-        logger.error({ message: "AVENGERS ASSEMBLE !", avenger: avenger.name });
-        logger.warn({ message: "I am... Iron Man.", avenger: avenger.name });
-        logger.info({
-          message: "Captain America Hail Hydra",
-          avenger: avenger.name,
-        });
-        logger.info({ message: "Hulk Smashhh!", avenger: avenger.name });
-        logger.info({
-          message:
-            "Whosoever holds this hammer, if he be worthy, shall possess the power of Thor.",
-          avenger: avenger.name,
-        });
-        res.json(avenger);
-        break;
+      }
+      logger.error({ message: "AVENGERS ASSEMBLE !", avenger: avenger.name });
+      logger.warn({ message: "I am... Iron Man.", avenger: avenger.name });
+      logger.info({
+        message: "Captain America Hail Hydra",
+        avenger: avenger.name,
+      });
+      logger.info({ message: "Hulk Smashhh!", avenger: avenger.name });
+      logger.info({
+        message:
+          "Whosoever holds this hammer, if he be worthy, shall possess the power of Thor.",
+        avenger: avenger.name,
+      });
+      res.json(avenger);
+      break;
     }
-    }
+  }
 });
 
 // Endpoint to get all users
@@ -298,12 +296,15 @@ app.get("/attackGKE", async (req, res) => {
   const username =
     req.body.username || req.query.username || req.headers["x-username"];
   try {
-    const response = await axios.get("http://avengers-security-python-service:80/api/getRequest", {
-      headers: {
-        "User-Agent": "dd-test-scanner-log",
-        "X-Username": username,
-      },
-    });
+    const response = await axios.get(
+      "http://avengers-security-python-service:80/api/getRequest",
+      {
+        headers: {
+          "User-Agent": "dd-test-scanner-log",
+          "X-Username": username,
+        },
+      }
+    );
     logger.info({ message: `This is the response ${response}` });
     res.status(200).send(response.data);
   } catch (error) {
