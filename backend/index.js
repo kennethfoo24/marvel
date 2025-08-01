@@ -158,7 +158,7 @@ app.get("/avenger/:name", async (req, res) => {
         logger.info({ message: "Avenger selected", avenger: avenger.name });
 
         const errResponse = await axios.get(
-          "http://avengers-delayed-python-service:80/api/getErrorRequest"
+          "http://avengers-security-python-service:80/api/getErrorRequest"
         );
       } catch (error) {
         logger.error({
